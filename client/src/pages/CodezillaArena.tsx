@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const CodezillaArena = () => {
   const [showModal, setShowModal] = useState(false);
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
-  const [dialogText, setDialogText] = useState("Take a 7-minute break to recover from that disaster."); // dynamic text
+  const [dialogText, setDialogText] = useState(
+    "Take a 7-minute break to recover from that disaster."
+  );
 
   useEffect(() => {
     if (showModal) {
@@ -15,8 +23,8 @@ const CodezillaArena = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               text: dialogText,
-              character: "Dr. Dan" // You can swap this dynamically later
-            })
+              character: "Dr. Dan", // Make sure backend maps this to "shimmer"
+            }),
           });
 
           if (!res.ok) throw new Error("TTS API failed");
@@ -29,8 +37,6 @@ const CodezillaArena = () => {
           audio.play();
         } catch (err) {
           console.error("TTS Error:", err);
-
-          // Optional: fallback audio if TTS fails
           const fallback = new Audio("/audio/drdan_fallback.mp3");
           fallback.play();
         }
@@ -41,28 +47,36 @@ const CodezillaArena = () => {
   }, [showModal, dialogText]);
 
   return (
-    <div className="p-6 text-center">
-      <h2 className="text-2xl mb-4">Codezilla Arena (Prototype Mode)</h2>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+      <div className="text-center space-y-6">
+        <h2 className="text-3xl font-bold text-zinc-800">
+          🧠 Codezilla Arena (Prototype Mode)
+        </h2>
 
-      <button
-        onClick={() => {
-          setDialogText("Take a 7-minute break to recover from that disaster."); // example future: random line picker
-          setShowModal(true);
-        }}
-        className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Test Modal
-      </button>
+        <Dialog open={showModal} onOpenChange={setShowModal}>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => {
+                setDialogText("Take a 7-minute break to recover from that disaster.");
+                setShowModal(true);
+              }}
+              className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded shadow"
+            >
+              Test Dr. Dan
+            </button>
+          </DialogTrigger>
 
-      <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>🧠 Dr. Dan Speaks</DialogTitle>
-          </DialogHeader>
-          <p>{dialogText}</p>
-          {audioSrc && <audio src={audioSrc} autoPlay className="hidden" />}
-        </DialogContent>
-      </Dialog>
+          <DialogContent aria-describedby="drdan-desc">
+            <DialogHeader>
+              <DialogTitle>🧬 Dr. Dan Speaks</DialogTitle>
+            </DialogHeader>
+            <p id="drdan-desc" className="text-sm text-gray-700 dark:text-gray-300 mt-2">
+              {dialogText}
+            </p>
+            {audioSrc && <audio src={audioSrc} autoPlay className="hidden" />}
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };

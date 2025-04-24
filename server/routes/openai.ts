@@ -45,13 +45,13 @@ router.post('/tts', async (req: Request, res: Response): Promise<void> => {
 
   try {
     const voiceMap = {
-      "Dr. Dan": "onyx",
+      "Dr. Dan": "echo",
       "Codezilla": "echo",
       "Nullbyte": "nova",
 	  "D'Bug": "shimmer"
     };
 
-    const voice = voiceMap[character as keyof typeof voiceMap] || "onyx";
+    const voice = voiceMap[character as keyof typeof voiceMap] || "echo";
 
     const speech = await openai.audio.speech.create({
       model: 'tts-1',

@@ -81,7 +81,7 @@ export class PromptBuilder {
   
 	private static pythonPrompt(track: string): string {
 	  return `
-  You’re up against **Python**, the toughest minion before the boss.
+  You’re up against **Pie-thon**, the toughest minion before the boss.
   
   Generate a **hard-level** Python multiple-choice question involving complex concepts (e.g. closures, asynchronous behavior, or prototypes), aimed at a ${track}-level developer.
   
