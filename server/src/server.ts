@@ -25,15 +25,14 @@ app.post('/api/tts', async (req: Request, res: Response) => {
   try {
     const speech = await openai.audio.speech.create({
       model: 'tts-1',
-      voice: 'onyx', // try 'echo', 'shimmer', or 'fable' too
-      input: text,
+      voice: 'onyx', 
+      input: text
     });
 
     const buffer = Buffer.from(await speech.arrayBuffer());
-    const filePath = path.join(__dirname, 'public', 'dan.mp3');
-    fs.writeFileSync(filePath, buffer);
-
-    res.json({ url: '/dan.mp3' });
+    res.set({ "Content-Type": "audio/mpeg"})
+    res.send(buffer);
+    
   } catch (err) {
     console.error('❌ TTS error:', err);
     res.status(500).send('TTS failed');
@@ -43,7 +42,7 @@ app.post('/api/tts', async (req: Request, res: Response) => {
 
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('🎙️ Dr. Dan server is up!');
+  res.send('🎙️ Codezilla server is up!');
 });
 
 
