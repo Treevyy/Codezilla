@@ -39,7 +39,7 @@ export class PromptBuilder {
 	  return `
   You're facing **Nullbyte**, the minion of bugs and broken logic.
   
-  Generate an **easy-level** JavaScript multiple-choice coding question that focuses on **debugging or fixing broken code** for a ${track}-level developer.
+  Generate an **easy-level** HTML, JavaScript, CSS multiple-choice coding question that focuses on **debugging or fixing broken code** for a ${track}-level developer.
   
   Requirements:
   - Limit to 2 sentences max.
@@ -83,7 +83,7 @@ export class PromptBuilder {
 	  return `
   You’re up against **Python**, the toughest minion before the boss.
   
-  Generate a **hard-level** JavaScript multiple-choice question involving complex concepts (e.g. closures, asynchronous behavior, or prototypes), aimed at a ${track}-level developer.
+  Generate a **hard-level** Python multiple-choice question involving complex concepts (e.g. closures, asynchronous behavior, or prototypes), aimed at a ${track}-level developer.
   
   Requirements:
   - Be concise (2 sentences max).
@@ -104,7 +104,7 @@ export class PromptBuilder {
 	  return `
   This is the final challenge: **Codezilla**, the boss monster of code.
   
-  Generate a **boss-level** multiple-choice JavaScript question that requires deep understanding of advanced topics (e.g. event loop, execution context, performance optimization), tailored for a ${track}-level developer.
+  Generate a **boss-level** multiple-choice MERN Stack question that requires deep understanding of advanced topics (e.g. event loop, execution context, performance optimization), tailored for a ${track}-level developer.
   
   Requirements:
   - Keep it under 2 sentences.

@@ -2,7 +2,7 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { OpenAI } from 'openai';
-import { PromptBuilder } from '../src/utils/promptbuilder';
+import { PromptBuilder } from '../src/utils/PromptBuilder';
 import dotenv from 'dotenv';
 // ✅ TODO: Initialize dotenv to use .env variables
 dotenv.config();

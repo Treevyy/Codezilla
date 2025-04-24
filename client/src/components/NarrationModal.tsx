@@ -1,0 +1,3 @@
+- Imports ModalBase
+- Passes variant='narration'
+- Can include avatar or sprite of Dr. Dan, text-only

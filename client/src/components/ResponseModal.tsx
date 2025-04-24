@@ -1,0 +1,4 @@
+- Imports ModalBase
+- Passes variant='response'
+- Includes buttons for Try Again or Next
+- Custom feedback messages
