@@ -1,12 +1,10 @@
-import BackgroundMusic from './components/BackgroundMusic';
 import CodezillaArena from './pages/CodezillaArena';
 
 const App = () => {
   return (
-    <>
-      <BackgroundMusic />
+    <div className="min-h-screen bg-black text-white p-6">
       <CodezillaArena />
-    </>
+    </div>
   );
 };
 
