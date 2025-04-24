@@ -1,45 +1,31 @@
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
 const CodezillaArena = () => {
-  const playTestSound = () => {
-    const sound = new Audio('/80s-loop-5.wav'); // ✅ Make sure this file is in /public
-    sound.play();
-  };
+  const [showModal, setShowModal] = useState(false);
 
   return (
-    <div
-      style={{
-        backgroundImage: `url('/Codezilla_bg.jpg')`, // ✅ Make sure this matches your actual file name
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        height: '100vh',
-        width: '100%',
-        color: 'white',
-        textAlign: 'center',
-        paddingTop: '4rem',
-      }}
-    >
+    <div className="p-6 text-center">
+      <h2 className="text-2xl mb-4">Codezilla Arena (Prototype Mode)</h2>
+      
       <button
-  onClick={playTestSound}
-  style={{
-    position: 'fixed',
-    bottom: '2rem',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    padding: '0.75rem 1.5rem',
-    fontSize: '1rem',
-    borderRadius: '0.5rem',
-    backgroundColor: '#8b0000',
-    color: 'white',
-    border: 'none',
-    cursor: 'pointer',
-  }}
->
-  Test Music
-</button>
+        onClick={() => setShowModal(true)}
+        className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Test Modal
+      </button>
 
-
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>🧠 Dr. Dan Speaks</DialogTitle>
+          </DialogHeader>
+          <p>You triggered this modal manually. Tailwind & Radix are synced up.</p>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 export default CodezillaArena;
+
