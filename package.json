@@ -34,7 +34,12 @@
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.1",
     "concurrently": "^9.1.2",
+<<<<<<< Updated upstream
     "nodemon": "^3.1.10",
+=======
+    "nodemon": "^3.1.9",
+>>>>>>> Stashed changes
+    "tailwindcss": "^4.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
