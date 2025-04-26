@@ -102,4 +102,152 @@
       z-index: 10;
     }
     
-    
+    /* Game Over Page Styling */
+    /* Full-screen rainy night background */
+.game-over-page {
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-family: sans-serif;
+}
+
+/* Logo in top-left corner */
+.game-over-logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 160px; /* adjust as needed */
+}
+
+/* The dark rounded panel */
+.game-over-container {
+  background: rgba(0, 0, 30, 0.9);
+  border-radius: 40px;
+  padding: 40px 60px;
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+  text-align: center;
+  max-width: 800px;
+  width: calc(100% - 80px);
+}
+
+/* “Game Over!” */
+.game-over-title {
+  color: #e00;
+  font-size: 4rem;
+  margin: 0;
+}
+
+/* Avatars row */
+.game-over-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin: 2.5rem 0;
+}
+
+.player-avatar,
+.codezilla-avatar {
+  width: 120px; /* adjust size */
+  height: auto;
+}
+
+/* “You were defeated…” */
+.game-over-subtitle {
+  color: #e00;
+  font-size: 2rem;
+  margin: 0.5rem 0 1.5rem;
+}
+
+/* “try again…” */
+.game-over-cta {
+  color: #fff;
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+/* Victory Page Styling */
+/* Full-screen rainy night background */
+.victory-page {
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-family: sans-serif;
+}
+
+/* Logo in top-left corner */
+.victory-logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 160px;
+}
+
+/* Dark rounded panel container */
+.victory-container {
+  position: relative;
+  background: rgba(0, 0, 30, 0.9);
+  border-radius: 40px;
+  padding: 40px 60px;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  text-align: center;
+  max-width: 800px;
+  width: calc(100% - 80px);
+  overflow: hidden;
+}
+
+/* Confetti overlay inside the panel */
+.victory-confetti {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* “Congratulations!” */
+.victory-title {
+  color: #fff;
+  font-size: 3.5rem;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Player avatar */
+.victory-avatar {
+  width: 120px;
+  height: auto;
+  margin: 2rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* “You defeated Codezilla!” */
+.victory-subtitle {
+  color: #fff;
+  font-size: 2rem;
+  margin: 0.5rem 0 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* “you are a coding master!” */
+.victory-cta {
+  color: #fff;
+  font-size: 1.25rem;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
