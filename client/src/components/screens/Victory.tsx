@@ -1,12 +1,46 @@
-// Victory screen with return to map link
-// TODO: IMPORT LIBRARIES: REACT, REACT-ROUTER-DOM
-// TODO:CR8 FUNCTIONAL VICTORY COMPONENT
-// TODO: W/I VICTORY COMPONENT USENAVIGATE()
-// TODO: ADD IMG SRC "/clients/backgrounds/codezilla_bkgd.png"
-// TODO: NAVIGATE BACK TO THE MAP
-// TODO: CREAT A CONTAINER VICTORY-CONTAINER
-// TODO: CREATE "VICTORY" HEADER
-// TODO: CREATE A VICTORY CONGRATULATORY MESSAGE
-// TODO: CREATE A PLAY AGAIN BUTTON
-// TODO: EXPORT DEFAULT VICTORY
+import './codezilla.css';
+
+export default function VictoryPage({
+  backgroundUrl   = '/assets/background.jpg',
+  logoUrl         = '/assets/codezilla-logo.png',
+  avatarUrl       = '/assets/player-avatar.png',
+  confettiUrl     = '/assets/confetti.png',
+}) {
+  return (
+    <div
+      className="victory-page"
+      style={{ backgroundImage: `url(${backgroundUrl})` }}
+    >
+      <img
+        className="victory-logo"
+        src={logoUrl}
+        alt="Codezilla Logo"
+      />
+
+      <div className="victory-container">
+        {/* Confetti overlay */}
+        <div
+          className="victory-confetti"
+          style={{ backgroundImage: `url(${confettiUrl})` }}
+        />
+
+        <h1 className="victory-title">Congratulations!</h1>
+
+        <img
+          className="victory-avatar"
+          src={avatarUrl}
+          alt="Player Avatar"
+        />
+
+        <h2 className="victory-subtitle">
+          You defeated Codezilla!
+        </h2>
+
+        <p className="victory-cta">
+          you are a coding master!
+        </p>
+      </div>
+    </div>
+  );
+}
 
