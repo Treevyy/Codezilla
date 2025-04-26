@@ -23,11 +23,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "mongoose": "^8.13.3",
     "openai": "^4.95.1",
     "react": "^19.1.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
+    "@types/mongoose": "^5.11.96",
     "@types/node": "^22.14.1",
     "concurrently": "^9.1.2",
     "nodemon": "^3.1.9",
