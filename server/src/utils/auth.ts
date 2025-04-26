@@ -41,7 +41,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     }
 
     req.user = user as JwtPayload;
-    next(); 
+    next();
   });
 };
 export const signToken = (username: string, email: string, _id: unknown) => {
