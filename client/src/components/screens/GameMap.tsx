@@ -1,48 +1,86 @@
-// MapScreen with clickable monster nodes
-//IMPORT LIBRARIES
+// src/components/screens/GameMap.tsx
+
+// IMPORT LIBRARIES
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Minion from './Minions'; 
+import "../../styles/codezilla.css";
 
-// ARRAY OF MINIONS: ID,POSITION ON SCREEN??, IMG SRC, QUESTION ID? (TALK 2 BACKEND TEAM, ON HOW TO USE W/ AI)
-const minions = [
-  { id: 1, name: 'Nullbyte', x: '10%', y: '20%', image: '/clients/minions/nullbyte3.png', questionId: 0 },
-  { id: 2, name: 'Typerrorasaurus', x: '30%', y: '50%', image: '/clients/minions/typerrorasaurus.png', questionId: 1 },
-  { id: 3, name: 'Dbug', x: '30%', y: '50%', image: '/clients/minions/Dbug2a.png', questionId: 1 },
-  { id: 4, name: 'Pie-thon', x: '30%', y: '50%', image: '/clients/minions/pie-thon.png', questionId: 1 },
-  { id: 5, name: 'Codezilla', x: '30%', y: '50%', image: '/clients/minions/codezilla2.png', questionId: 1 },
-
-];
-// CREATE FUNCTIONAL COMPONENT MAPSCREEN, USENAVIGATE()
-// CREATE FUNCTION CALLED GOTOQUESTIONS
-// INSIDE GOTOQUESTIONS: IDENTIFY EACH QUESTION WITH A MINION
-// ADD BACKGROUND IMG SRC "/clients/backgrounds/codezilla_bkgd.png"
-// CREATE A CONTAINER QUIZ-CONTAINER
-// INSIDE CONTAINER A MAP THAT HAS CLICKABLE MINIONS ON NODES CONNECTED WITH LINES
-// POPUP QUESTION SCREEN FOR EACH QUESTION
-// WHEN CLICKED IT TAKES TO GOTOQUESTION ASSCOIATED WITH EACH MINION
-// THEN EITHR AUTO MATICALLY GOES TO THE NEXT MINION QUESTIONS OR TAKES BACK TO MAP HANDLERESTART?
-// EXPORT TO MAPSCREEN
-
-const MapScreen: React.FC = () => {
+const GameMap: React.FC = () => {
   const navigate = useNavigate();
 
-  const goToQuestion = (id: number) => {
-    navigate(`/quiz/${id}`);
+  const minions = [
+    {
+      id: '1',
+      x: 100,
+      y: 150,
+      image: '/minions/nullbyte3a.png',
+      name: 'Nullbyte',
+      questionId: 'q1',
+    },
+    {
+      id: '2',
+      x: 250,
+      y: 200,
+      image: '/minions/dbug2a.png',
+      name: 'Dbug',
+      questionId: 'q2',
+    },
+    {
+      id: '3',
+      x: 400,
+      y: 250,
+      image: '/minions/typerrorus.png',
+      name: 'Typerrorasaurus',
+      questionId: 'q3',
+    },
+    {
+      id: '4',
+      x: 550,
+      y: 300,
+      image: '/minions/monster-left.png',
+      name: 'Pie-Thon',
+      questionId: 'q4',
+    },
+    {
+      id: '5',
+      x: 700,
+      y: 350,
+      image: '/minions/codezilla2.png',
+      name: 'Codezilla',
+      questionId: 'q5',
+    },
+  ];
+
+  const goToQuestion = (questionId: string) => {
+    console.log('Go to question', questionId);
+    navigate(`/question/${questionId}`);
   };
 
   return (
-    <div className="quiz-container">
+    <div className="game-map">
+      {/* Background image */}
+      <img
+        src="/background/codezilla_bkgd.png"
+        alt="rainy cityscape"
+        className="background-image"
+      />
+
+      {/* Minions */}
       {minions.map((minion) => (
-        <div
+        <Minion
           key={minion.id}
-          style={{ position: 'absolute', top: minion.y, left: minion.x, cursor: 'pointer' }}
-          onClick={() => goToQuestion(minion.questionId)}
-        >
-          <img src={minion.image} alt={minion.name} style={{ width: '80px', height: '80px' }} />
-        </div>
+          id={minion.id}
+          x={minion.x}
+          y={minion.y}
+          image={minion.image}
+          name={minion.name}
+          questionId={minion.questionId}
+          goToQuestion={goToQuestion}
+        />
       ))}
     </div>
   );
 };
 
-export default MapScreen;
+export default GameMap;
