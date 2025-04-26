@@ -5,22 +5,33 @@ import { OpenAI } from 'openai';
 // import fs from 'fs';
 // import path from 'path';
 import { ApolloServer } from 'apollo-server-express';
+import { expressMiddleware } from '@apollo/server/express4';
 import typeDefs from './schemas/typeDefs';
 import resolvers from './schemas/resolvers';
 import { authenticateToken } from './utils/auth';
 
 dotenv.config();
 
-const startServer = async () => {
-  const app = express();
-  const PORT = process.env.PORT || 3001;
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+  const startServer = async () => {
+    const app = express();
+    const PORT = process.env.PORT || 3001;
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
-  // Middleware
-  app.use(cors());
-  app.use(express.json());
-  app.use(express.static('public')); // serve generated mp3 files
-  app.use(authenticateToken);
+    // Middleware
+    app.use(cors());
+    app.use(express.json());
+    app.use(express.static('public')); // serve generated mp3 files
+    app.use(authenticateToken);
+
+    // Apollo Server setup
+    const server = new ApolloServer({
+      typeDefs,
+      resolvers,
+      context: ({ req }: { req: Request }) => ({ user: req.user }),
+    });
+
+    await server.start();
+    server.applyMiddleware({ app, path: '/graphql' });
 
   // TTS Route for Dr. Dan
   app.post('/api/tts', async (req: Request, res: Response) => {
@@ -46,16 +57,6 @@ const startServer = async () => {
   app.get('/', (req: Request, res: Response) => {
     res.send('🎙️ Codezilla server is up!');
   });
-
-  // Apollo Server setup
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: ({ req }: { req: Request }) => ({ user: req.user }),
-  });
-
-  await server.start();
-  server.applyMiddleware({ app, path: '/graphql' });
 
   // Start the server
   app.listen(PORT, () => {
