@@ -2,15 +2,14 @@
 /*CREATE IMPORTS */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/codezilla.css';
+import "../../styles/codezilla.css";
 
 const avatarList = [
-  '/client/avatars/carmen.png',
-  '/client/avatars/jacquilyn.png',
-  '/client/avatars/trevor.png',
-  '/client/avatars/michael.png',
-  '/client/avatars/shawna.png',
-
+  '/avatars/carmen.png',
+  '/avatars/jacquilyn.png',
+  '/avatars/trevor.png',
+  '/avatars/michael.png',
+  '/avatars/shawna.png',
 ];
 
 const SignUp: React.FC = () => {
@@ -28,7 +27,7 @@ const SignUp: React.FC = () => {
   return (
     <div className="login-wrapper">
        <img
-        src="/clients/backgrounds/codezilla_bkgd.png"
+        src="/background/codezilla_bkgd.png"
         alt="Background"
         className="background-image"
       />

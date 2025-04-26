@@ -1,21 +1,30 @@
 /* BACKGROUND */
-.body {
+/* .body {
     background-image: url('/clients/backgrounds/codezilla_bkgd.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 100vh;
+    height: 100vh; */
   
-  }
-  /* .background-image {
+  /* } */
+  .background-image {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       z-index: 0;
-    } */
+    }
   
+    .login-wrapper{
+        height: 100vh;
+        width: 100vw;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow:hidden;
+    }
      /* SIGNUP */
   
      .signup-button {
@@ -27,6 +36,26 @@
       margin-top: 20px;
     }
     
+    .avatar-grid {
+        display:flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+        margin: 2 rem 0;
+        width: 100%;
+    }
+
+    .avatar-option{
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .avata
     /* QUIZ CONTAINER */
   
     .quiz-container {
@@ -41,8 +70,9 @@
     .question-box {
       position: absolute;
       top: 50%;
-      left: 50%;
-      width: 90%;
+      left: 50%; 
+      height: 80%;
+      width: 80%;
       max-width: 600px;
       transform: translate(-50%, -50%);
       background: rgba(0, 0, 50, 0.85);
