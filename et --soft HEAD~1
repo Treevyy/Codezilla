@@ -1,0 +1,30 @@
+[33m4724f5b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/Modals[m[33m)[m HEAD@{0}: commit: committing to pull
+[33m9f2756b[m[33m ([m[1;31mgroup-origin/main[m[33m, [m[1;31mgroup-origin/HEAD[m[33m)[m HEAD@{1}: pull group-origin main: Fast-forward
+[33m2e42503[m[33m ([m[1;31mgroup-origin/feature/tts-integration[m[33m, [m[1;32mtts[m[33m)[m HEAD@{2}: reset: moving to HEAD
+[33m2e42503[m[33m ([m[1;31mgroup-origin/feature/tts-integration[m[33m, [m[1;32mtts[m[33m)[m HEAD@{3}: checkout: moving from main to feature/Modals
+[33m9631bfb[m[33m ([m[1;32mmain[m[33m)[m HEAD@{4}: reset: moving to HEAD
+[33m9631bfb[m[33m ([m[1;32mmain[m[33m)[m HEAD@{5}: pull group-origin main: Fast-forward
+[33m9409cce[m HEAD@{6}: checkout: moving from feature/Modals to main
+[33m2e42503[m[33m ([m[1;31mgroup-origin/feature/tts-integration[m[33m, [m[1;32mtts[m[33m)[m HEAD@{7}: reset: moving to HEAD
+[33m2e42503[m[33m ([m[1;31mgroup-origin/feature/tts-integration[m[33m, [m[1;32mtts[m[33m)[m HEAD@{8}: reset: moving to HEAD~1
+[33m5e2b808[m HEAD@{9}: commit: added minion to promptbuilder and beginning code for models
+[33m2e42503[m[33m ([m[1;31mgroup-origin/feature/tts-integration[m[33m, [m[1;32mtts[m[33m)[m HEAD@{10}: checkout: moving from main to feature/Modals
+[33m9409cce[m HEAD@{11}: reset: moving to HEAD
+[33m9409cce[m HEAD@{12}: checkout: moving from feature/Modals to main
+[33m2e42503[m[33m ([m[1;31mgroup-origin/feature/tts-integration[m[33m, [m[1;32mtts[m[33m)[m HEAD@{13}: checkout: moving from tts to feature/Modals
+[33m2e42503[m[33m ([m[1;31mgroup-origin/feature/tts-integration[m[33m, [m[1;32mtts[m[33m)[m HEAD@{14}: commit: updated gitignore
+[33m82dd80c[m HEAD@{15}: commit (merge): Merge group main with my changes
+[33mc7b497a[m HEAD@{16}: commit: initial commit
+[33m944ba98[m HEAD@{17}: pull origin main: Merge made by the 'ort' strategy.
+[33m5565cb0[m[33m ([m[1;31morigin/tts[m[33m)[m HEAD@{18}: reset: moving to HEAD
+[33m5565cb0[m[33m ([m[1;31morigin/tts[m[33m)[m HEAD@{19}: commit: created tts for characters
+[33mfe4b593[m[33m ([m[1;31morigin/modals[m[33m, [m[1;32mmodals[m[33m)[m HEAD@{20}: checkout: moving from modals to tts
+[33mfe4b593[m[33m ([m[1;31morigin/modals[m[33m, [m[1;32mmodals[m[33m)[m HEAD@{21}: commit: set up dir tree
+[33mf21ef68[m HEAD@{22}: commit: updated code structure with modals, added tailwind framework and installs for testing modals
+[33mdc5f79c[m[33m ([m[1;31morigin/OpenAI[m[33m, [m[1;32mOpenAI[m[33m)[m HEAD@{23}: checkout: moving from OpenAI to modals
+[33mdc5f79c[m[33m ([m[1;31morigin/OpenAI[m[33m, [m[1;32mOpenAI[m[33m)[m HEAD@{24}: commit: added speech model to server
+[33m2b056df[m HEAD@{25}: commit: Added openai route, index.ts, promptbuilder
+[33m9409cce[m HEAD@{26}: checkout: moving from main to OpenAI
+[33m9409cce[m HEAD@{27}: commit: initial commit
+[33mf853f34[m HEAD@{28}: Branch: renamed refs/heads/master to refs/heads/main
+[33mf853f34[m HEAD@{30}: commit (initial): first commit
