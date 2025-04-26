@@ -10,28 +10,54 @@ import typeDefs from './schemas/typeDefs';
 import resolvers from './schemas/resolvers';
 import { authenticateToken } from './utils/auth';
 
+
+// Extend the Request interface to include the user property
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any; // Replace 'any' with the appropriate type for your user object
+    }
+  }
+}
+
 dotenv.config();
 
-  const startServer = async () => {
     const app = express();
     const PORT = process.env.PORT || 3001;
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
-    // Middleware
-    app.use(cors());
-    app.use(express.json());
-    app.use(express.static('public')); // serve generated mp3 files
-    app.use(authenticateToken);
+    // Create a new instance of an Apollo server with the GraphQL schema
+    const startApolloServer = async () => {
+      const server = new ApolloServer({
+        typeDefs,
+        resolvers,
+      });
 
-    // Apollo Server setup
-    const server = new ApolloServer({
-      typeDefs,
-      resolvers,
-      context: ({ req }: { req: Request }) => ({ user: req.user }),
-    });
+      await server.start();
+      app.use(express.urlencoded({ extended: false }));
+      app.use(express.json());
+      app.use(express.static('public')); // serve generated mp3 file
+      app.use('/graphql', expressMiddleware(server as any,
+        {
+          context: authenticateToken as any
+        }
+      ));
+      
+      // if we're in production, serve client/build as static assets
+      if (process.env.NODE_ENV === 'production') {
+        app.use(express.static(path.join(dirname, '../client/build')));
+      
+        app.get('*', (_req: Request, res: Response) => {
+          res.sendFile(path.join(dirname, '../client/dist/index.html'));
+        });
+      }
 
-    await server.start();
-    server.applyMiddleware({ app, path: '/graphql' });
+      // Start the server
+      app.listen(PORT, () => {
+        console.log(`✅ Server is running on http://localhost:${PORT}`);
+        console.log(`✅ GraphQL endpoint is available at http://localhost:${PORT}/graphql`);
+      });
+    };
 
   // TTS Route for Dr. Dan
   app.post('/api/tts', async (req: Request, res: Response) => {
@@ -58,11 +84,4 @@ dotenv.config();
     res.send('🎙️ Codezilla server is up!');
   });
 
-  // Start the server
-  app.listen(PORT, () => {
-    console.log(`✅ Server is running on http://localhost:${PORT}`);
-    console.log(`✅ GraphQL endpoint is available at http://localhost:${PORT}/graphql`);
-  });
-};
-
-startServer();
+startApolloServer();
