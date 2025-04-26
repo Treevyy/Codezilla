@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import openaiRoutes from './routes/openai';
+import openaiRoutes from './api/openai';
 
 dotenv.config();
 
