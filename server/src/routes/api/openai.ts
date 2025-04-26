@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { OpenAI } from 'openai';
-import { PromptBuilder } from '../src/utils/PromptBuilder';
+import { PromptBuilder } from '../../utils/PromptBuilder';
 import dotenv from 'dotenv';
 
 dotenv.config();
