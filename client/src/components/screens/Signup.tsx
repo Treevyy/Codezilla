@@ -26,11 +26,6 @@ const SignUp: React.FC = () => {
 
   return (
     <div className="login-wrapper">
-       <img
-        src="/background/codezilla_bkgd.png"
-        alt="Background"
-        className="background-image"
-      />
       <form className="question-box" onSubmit={handleSubmit}>
         <h2>Create Your Codezilla Account</h2>
         <input
