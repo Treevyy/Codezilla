@@ -20,9 +20,6 @@ const Minion: React.FC<MinionProps> = ({
   questionId, 
   goToQuestion,
  }) => {
-
-  const isCodezilla = name === 'Codezilla';
-
   
   return (
     <div
