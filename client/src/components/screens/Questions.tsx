@@ -1,5 +1,3 @@
-// client/src/components/screens/Questions.tsx
-
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 

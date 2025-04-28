@@ -77,13 +77,7 @@ const GameMap: React.FC = () => {
 
   return (
     <div className="game-map">
-      {/* BACKGROUND IMAGE */}
-      <img
-        src="/background/codezilla_bkgd.png"
-        alt="rainy cityscape"
-        className="background-image"
-      />
-
+    
       {/* SVG LINES AND CIRCLES */}
       <svg className="map-lines">
         {/* LINES BETWEEN NODES */}
@@ -139,7 +133,6 @@ const GameMap: React.FC = () => {
           name={minion.name}
           questionId={minion.questionId}
           goToQuestion={goToQuestion}
-          size={minion.id === '5' || minion.name === 'Codezilla' ? 400 : 400} // ✅ DOUBLE SAFE
         />
       ))}
     </div>
