@@ -1,8 +1,4 @@
-// src/components/NarrationModal.tsx
-
-"use client";
-
-import ModalBase from "@/components/ModalBase";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface NarrationModalProps {
   isOpen: boolean;
@@ -12,16 +8,17 @@ interface NarrationModalProps {
 
 const NarrationModal = ({ isOpen, onClose, text }: NarrationModalProps) => {
   return (
-    <ModalBase
-      open={isOpen}
-      onOpenChange={(open: boolean) => { if (!open) onClose(); }}
-      title="Narration"
-      description={text}
-    >
-      {/* Optional: You can add more children here later if needed */}
-    </ModalBase>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent className="rounded-2xl bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-2xl">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold text-center">{text}</DialogTitle>
+        </DialogHeader>
+        <DialogDescription className="text-center mt-4">
+          {/* Optional: you can add subtext, instructions, even a button here */}
+        </DialogDescription>
+      </DialogContent>
+    </Dialog>
   );
 };
 
 export default NarrationModal;
-
