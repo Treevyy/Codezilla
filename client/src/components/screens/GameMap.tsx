@@ -78,7 +78,7 @@ const GameMap: React.FC = () => {
   return (
     <div className="game-map">
     
-      {/* SVG LINES AND CIRCLES */}
+      {/* SVG LINES AND CIRCLES 2*/}
       <svg className="map-lines">
         {/* LINES BETWEEN NODES */}
         {nodes.map((node, index) => {
