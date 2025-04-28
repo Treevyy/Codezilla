@@ -1,4 +1,4 @@
-import './codezilla.css';
+import "../../styles/codezilla.css";
 
 export default function VictoryPage({
   backgroundUrl   = '/assets/background.jpg',

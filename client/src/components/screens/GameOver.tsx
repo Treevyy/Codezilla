@@ -1,4 +1,4 @@
-import './codezilla.css';
+import "../../styles/codezilla.css";
 
 const GameOverPage = ({
   backgroundUrl = '/assets/background.jpg',

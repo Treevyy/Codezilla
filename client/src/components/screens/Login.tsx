@@ -12,12 +12,6 @@ export const Login: React.FC = () => {
 
   return (
     <div className="login-wrapper">
-      <img
-  src="/background/codezilla_bkgd.png"
-  alt="rainy cityscape"
-        className="background-image"
-      />
-
       <div className="login-content">
         <div className="question-box">
           <h1>Login</h1>
