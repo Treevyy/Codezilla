@@ -1,21 +1,15 @@
 import './codezilla.css';
 
 export default function VictoryPage({
-  backgroundUrl   = '/assets/background.jpg',
-  logoUrl         = '/assets/codezilla-logo.png',
-  avatarUrl       = '/assets/player-avatar.png',
-  confettiUrl     = '/assets/confetti.png',
+  backgroundUrl   = 'client/background/codezilla_bkgd.png',
+  avatarUrl       = 'client/avatars/avatar4.png',
+  confettiUrl     = 'client/background/confetti_image.jpg',
 }) {
   return (
     <div
       className="victory-page"
       style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
-      <img
-        className="victory-logo"
-        src={logoUrl}
-        alt="Codezilla Logo"
-      />
 
       <div className="victory-container">
         {/* Confetti overlay */}
