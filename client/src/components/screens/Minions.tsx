@@ -1,25 +1,52 @@
-// src/components/Minion.tsx
-
 import React from 'react';
 
 interface MinionProps {
   id: string;
-  x: number;
-  y: number;
+  xPercent: number;
+  yPercent: number;
   image: string;
   name: string;
   questionId: string;
   goToQuestion: (questionId: string) => void;
+  size: number,
 }
 
-const Minion: React.FC<MinionProps> = ({ id, x, y, image, name, questionId, goToQuestion }) => {
+const Minion: React.FC<MinionProps> = ({ 
+  id, 
+  xPercent, 
+  yPercent, 
+  image, 
+  name, 
+  questionId, 
+  goToQuestion,
+ }) => {
+  
   return (
     <div
-      id={`minion-${id}`} // ✅ Corrected here
-      style={{ position: 'absolute', top: y, left: x, cursor: 'pointer' }}
+      id={`minion-${id}`}
+      className="minion"
+      style={{
+        position: 'absolute',
+        top: `${yPercent}%`,
+        left: `${xPercent}%`,
+        width: '120px',
+        height: '120px',
+        transform: 'translate(-50%, -50%)',
+        cursor: 'pointer',
+        zIndex: 2,
+      }}
       onClick={() => goToQuestion(questionId)}
+      title={name}
     >
-      <img src={image} alt={name} style={{ width: '80px', height: '80px' }} />
+      <img
+        src={image}
+        alt={name}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+        }}
+      />
     </div>
   );
 };

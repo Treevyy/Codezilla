@@ -1,253 +1,357 @@
 /* BACKGROUND */
-/* .body {
-    background-image: url('/clients/backgrounds/codezilla_bkgd.png');
+body {
+    background-image: url('/codezilla_bkgd.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 100vh; */
-  
-  /* } */
-  .background-image {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
-  
-    .login-wrapper{
-        height: 100vh;
-        width: 100vw;
-        display:flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow:hidden;
-    }
-     /* SIGNUP */
-  
-     .signup-button {
-      font-size: 1rem;
-      background: none;
-      color: #7dd3fc;
-      border: none;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-    
-    .avatar-grid {
-        display:flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1.5rem;
-        margin: 2 rem 0;
-        width: 100%;
-    }
+    height: 100vh;
+}
 
-    .avatar-option{
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 2px solid transparent;
-    }
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+.login-wrapper {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
 
-    .avata
-    /* QUIZ CONTAINER */
-  
-    .quiz-container {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-    }
-    
-    /* QUESTION BOX */
-  
-    .question-box {
-      position: absolute;
-      top: 50%;
-      left: 50%; 
-      height: 80%;
-      width: 80%;
-      max-width: 600px;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 50, 0.85);
-      padding: 40px;
-      border-radius: 20px;
-      text-align: center;
-      z-index: 10;
-    }
-    
-    .question-options p {
-      margin: 10px 0;
-      cursor: pointer;
-      color: #facc15;
-    }
-    
-    .quiz-header {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(30, 30, 80, 0.7);
-      border-radius: 12px;
-      padding: 10px 24px;
-      display: flex;
-      gap: 20px;
-      font-size: 1.5rem;
-      z-index: 10;
-    }
-    
-    /* Game Over Page Styling */
-    /* Full-screen rainy night background */
+/* SIGNUP */
+
+.signup-button {
+    font-size: 1rem;
+    background: none;
+    color: #7dd3fc;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.avatar-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 2 rem 0;
+    width: 100%;
+}
+
+.avatar-option {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.avata
+/* QUIZ CONTAINER */
+
+.quiz-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* QUESTION BOX */
+
+.question-box {
+
+    width: 80%;
+    max-width: 600px;
+    background: rgba(0, 0, 50, 0.85);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 10;
+}
+
+.question-options p {
+    margin: 10px 0;
+    cursor: pointer;
+    color: #facc15;
+}
+
+.quiz-header {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(30, 30, 80, 0.7);
+    border-radius: 12px;
+    padding: 10px 24px;
+    display: flex;
+    gap: 20px;
+    font-size: 1.5rem;
+    z-index: 10;
+}
+
+/* Game Over Page Styling */
+/* Full-screen rainy night background */
 .game-over-page {
-  width: 100vw;
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  font-family: sans-serif;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-family: sans-serif;
 }
 
 /* Logo in top-left corner */
 .game-over-logo {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 160px; /* adjust as needed */
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 160px;
+    /* adjust as needed */
 }
 
 /* The dark rounded panel */
 .game-over-container {
-  background: rgba(0, 0, 30, 0.9);
-  border-radius: 40px;
-  padding: 40px 60px;
-  box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-  text-align: center;
-  max-width: 800px;
-  width: calc(100% - 80px);
+    background: rgba(0, 0, 30, 0.9);
+    border-radius: 40px;
+    padding: 40px 60px;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    text-align: center;
+    max-width: 800px;
+    width: calc(100% - 80px);
 }
 
 /* “Game Over!” */
 .game-over-title {
-  color: #e00;
-  font-size: 4rem;
-  margin: 0;
+    color: #e00;
+    font-size: 4rem;
+    margin: 0;
 }
 
 /* Avatars row */
 .game-over-images {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  margin: 2.5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 2.5rem 0;
 }
 
 .player-avatar,
 .codezilla-avatar {
-  width: 120px; /* adjust size */
-  height: auto;
+    width: 120px;
+    /* adjust size */
+    height: auto;
 }
 
 /* “You were defeated…” */
 .game-over-subtitle {
-  color: #e00;
-  font-size: 2rem;
-  margin: 0.5rem 0 1.5rem;
+    color: #e00;
+    font-size: 2rem;
+    margin: 0.5rem 0 1.5rem;
 }
 
 /* “try again…” */
 .game-over-cta {
-  color: #fff;
-  font-size: 1.25rem;
-  margin: 0;
+    color: #fff;
+    font-size: 1.25rem;
+    margin: 0;
 }
-
 /* Victory Page Styling */
 /* Full-screen rainy night background */
 .victory-page {
-  width: 100vw;
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  font-family: sans-serif;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-family: sans-serif;
 }
 
 /* Logo in top-left corner */
 .victory-logo {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 160px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 160px;
 }
 
 /* Dark rounded panel container */
 .victory-container {
-  position: relative;
-  background: rgba(0, 0, 30, 0.9);
-  border-radius: 40px;
-  padding: 40px 60px;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-  text-align: center;
-  max-width: 800px;
-  width: calc(100% - 80px);
-  overflow: hidden;
+    position: relative;
+    background: rgba(0, 0, 30, 0.9);
+    border-radius: 40px;
+    padding: 40px 60px;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    text-align: center;
+    max-width: 800px;
+    width: calc(100% - 80px);
+    overflow: hidden;
 }
 
 /* Confetti overlay inside the panel */
 .victory-confetti {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.8;
-  pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.8;
+    pointer-events: none;
 }
 
 /* “Congratulations!” */
 .victory-title {
-  color: #fff;
-  font-size: 3.5rem;
-  margin: 0;
-  position: relative;
-  z-index: 1;
+    color: #fff;
+    font-size: 3.5rem;
+    margin: 0;
+    position: relative;
+    z-index: 1;
 }
 
 /* Player avatar */
 .victory-avatar {
-  width: 120px;
-  height: auto;
-  margin: 2rem 0;
-  position: relative;
-  z-index: 1;
+    width: 120px;
+    height: auto;
+    margin: 2rem 0;
+    position: relative;
+    z-index: 1;
 }
 
 /* “You defeated Codezilla!” */
 .victory-subtitle {
-  color: #fff;
-  font-size: 2rem;
-  margin: 0.5rem 0 1rem;
-  position: relative;
-  z-index: 1;
+    color: #fff;
+    font-size: 2rem;
+    margin: 0.5rem 0 1rem;
+    position: relative;
+    z-index: 1;
 }
 
 /* “you are a coding master!” */
 .victory-cta {
-  color: #fff;
-  font-size: 1.25rem;
-  margin: 0;
-  position: relative;
-  z-index: 1;
+    color: #fff;
+    font-size: 1.25rem;
+    margin: 0;
+    position: relative;
+    z-index: 1;
 }
+
+/* GAME MAP */
+.game-map {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* BACKGROUND IMAGE */
+.background-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    z-index: 0;
+}
+
+/* GAME MAP */
+.game-map {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* BACKGROUND IMAGE */
+  .background-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    z-index: 0;
+  }
+  
+  /* MAP LINES CONTAINER */
+  .map-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* LINES BETWEEN NODES */
+  .map-line {
+    stroke: #7dd3fc;
+    stroke-width: 4;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 6px #7dd3fc);
+    stroke-linecap: round;
+  }
+  
+  /* OUTER GLOWING CIRCLE */
+  .map-node-outer {
+    fill: #7dd3fc;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 8px #7dd3fc) drop-shadow(0 0 12px #7dd3fc);
+    transition: all 0.5s ease;
+  }
+  
+  /* DARKER INNER CIRCLE */
+  .map-node-inner {
+    fill: #154186; 
+    opacity: 1;
+  }
+  
+  /* GLOWING GREEN COMPLETED OUTER CIRCLE */
+  .map-node-outer.completed {
+    fill: #22c55e;
+    filter: drop-shadow(0 0 10px #22c55e) drop-shadow(0 0 15px #22c55e);
+    animation: pulse 2s infinite;
+  }
+  
+  /* GLOWING GREEN COMPLETED LINE */
+  .map-line.completed {
+    stroke: #22c55e;
+    opacity: 1;
+    filter: drop-shadow(0 0 8px #22c55e);
+    animation: pulse 2s infinite;
+  }
+  
+  /* PULSE ANIMATION */
+  @keyframes pulse {
+    0% {
+      filter: drop-shadow(0 0 8px #22c55e);
+    }
+    50% {
+      filter: drop-shadow(0 0 15px #22c55e);
+    }
+    100% {
+      filter: drop-shadow(0 0 8px #22c55e);
+    }
+  }
+  
+  /* MINION HOVER EFFECT */
+  .minion:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    transition: transform 0.3s ease;
+  }
+  
