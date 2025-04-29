@@ -43,7 +43,7 @@ export const authMiddleware = ({ req }: { req: any }) => {
 };
 
 export const authenticateToken = async ({ req }: { req: Request }) => {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.get('authorization');
   let user = null;
   console.log('AUTH HEADER', authHeader);
 

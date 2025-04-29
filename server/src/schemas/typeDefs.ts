@@ -26,12 +26,20 @@ const typeDefs = gql`
     choices: [String!]!
     answer: String!
   }
+  type Character {
+    _id: ID
+    name: String!
+    picture: String!
+    voice: String!
+  }
 
   type Query {
     users: [User]
     user(username: String!): User
     me: User
     generateQuestion(track: String!, level: String!, minion: String!): Question
+    characters: [Character]!
+
   }
 
   type Mutation {
