@@ -1,13 +1,13 @@
 import { gql } from '@apollo/client';
 
-export const GET_QUESTIONS = gql`
-  query GetQuestions {
+export const GENERATE_QUESTIONS = gql`
+  query GenerateQuestion($track: String!, level: $level, minion: $minion) {
     questions {
-      _id
-      questionText
-      options
-      correctAnswer
+      question
+      choices
+      answer
     }
   }
 `;
+
 

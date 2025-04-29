@@ -1,6 +1,13 @@
 import User from '../models/User';
 import { signToken } from '../utils/auth';
 import { AuthenticationError } from 'apollo-server-express';
+import { OpenAI } from 'openai';
+import { PromptBuilder } from '../utils/PromptBuilder'; 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 interface AddUserArgs {
   input: {
@@ -23,7 +30,36 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
+    generateQuestion: async (_parent: any, args: { track: string; level: string; minion: string }) => {
+      const { track, level, minion } = args;
+      const prompt = PromptBuilder.getPrompt(track, level);
+
+      try {
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-3.5-turbo',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 250,
+        });
+
+        const raw = completion.choices[0].message.content ?? '';
+        const [question, ...choicesAndAnswer] = raw.split('\n').filter(Boolean);
+        const choices = choicesAndAnswer.slice(0, -1);
+        const answer = choicesAndAnswer[choicesAndAnswer.length - 1];
+
+        return { question, choices, answer };
+      } catch (error) {
+        console.error('OpenAI failed, falling back to hardcoded question:', error);
+        const fallback = PromptBuilder.getFallbackQuestion(minion);
+
+        return {
+          question: fallback.question,
+          choices: fallback.choices,
+          answer: fallback.choices[fallback.correctIndex],
+        };
+      }
+    },
   },
+
   Mutation: {
     addUser: async (_parent: any, { input }: AddUserArgs) => {
       const user = await User.create(input) as { username: string; email: string; _id: string };
