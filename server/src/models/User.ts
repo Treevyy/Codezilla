@@ -6,6 +6,8 @@ interface IUser extends Document {
     username: string;
     email: string;
     password: string;
+    correctAnswers: number;
+    wrongAnswers: number;
     isCorrectPassword(password: string): Promise<boolean>;
 }
 
@@ -28,6 +30,14 @@ const userSchema = new Schema<IUser>(
             type: String,
             required: true,
             minlength: 5,
+        },
+        correctAnswers: {
+            type: Number,
+            default: 0,
+        },
+        wrongAnswers: {
+            type: Number,
+            default: 0,
         },
     },
     {
@@ -53,3 +63,4 @@ userSchema.methods.isCorrectPassword = async function (password: string): Promis
 const User = model<IUser>('User', userSchema);
 
 export default User;
+

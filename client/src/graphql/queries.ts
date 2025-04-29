@@ -1,8 +1,9 @@
 import { gql } from '@apollo/client';
 
-export const GENERATE_QUESTIONS = gql`
-  query GenerateQuestion($track: String!, level: $level, minion: $minion) {
-    questions {
+// Query to generate a new coding question
+export const GENERATE_QUESTION = gql`
+  query GenerateQuestion($track: String!, $level: String!, $minion: String!) {
+    generateQuestion(track: $track, level: $level, minion: $minion) {
       question
       choices
       answer
@@ -10,4 +11,14 @@ export const GENERATE_QUESTIONS = gql`
   }
 `;
 
-
+// (Optional bonus if someone else pulls user stats for leaderboard)
+export const ME = gql`
+  query Me {
+    me {
+      _id
+      username
+      correctAnswers
+      wrongAnswers
+    }
+  }
+`;
