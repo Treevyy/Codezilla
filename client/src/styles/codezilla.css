@@ -168,6 +168,36 @@ body,
     font-size: 1.25rem;
     margin: 0;
 }
+
+.game-over-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .game-over-actions .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  
+  .play-again-btn:hover {
+    transform: scale(1.05);
+  }
+  
+  .main-menu-btn {
+    background-color: #555;
+    color: #fff;
+  }
+  
+  .main-menu-btn:hover {
+    background-color: #333;
+  }
+
 /* Victory Page Styling */
 /* Full-screen rainy night background */
 .victory-page {
@@ -249,6 +279,36 @@ body,
     z-index: 1;
 }
 
+.victory-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .victory-actions .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  
+  .play-again-btn:hover,
+  .main-menu-btn:hover {
+    transform: scale(1.05);
+  }
+  
+  .main-menu-btn {
+    background-color: #555;
+    color: #fff;
+  }
+  
+  .main-menu-btn:hover {
+    background-color: #333;
+  }
+  
 /* GAME MAP */
 .game-map {
     position: relative;
