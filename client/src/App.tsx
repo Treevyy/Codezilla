@@ -6,7 +6,7 @@ import GameOver from './components/screens/GameOver';
 import Victory from './components/screens/Victory';
 import Signup from './components/screens/Signup';
 import Questions from './components/screens/Questions';
-import codezillaLogo from 'client/public/codezilla_logo.png';
+
 import './styles/codezilla.css';
 
 const LogoutButton: React.FC = () => {
@@ -16,33 +16,45 @@ const LogoutButton: React.FC = () => {
     localStorage.clear();        
     navigate('/signup'); 
   };   
+
   return (
     <button className="logout-button" onClick={handleLogout}>
       Logout
     </button>
   );
 };
+
 const App: React.FC = () => {
   return (
-    <Router> 
-    <div className="app-wrapper">
-     <img
-        src="/codezilla_logo.png"
-        alt="Codezilla Logo"
-        className="logo-background"
-      />
-      <LogoutButton />
+    <Router>
+      <div className="app-wrapper">
+        {/* Background Image */}
+        <img
+          src="/background/codezilla_bkgd.png"
+          alt="Dark rainy cityscape"
+          className="background-image"
+        />
 
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/map" element={<GameMap />} />
-        <Route path="/gameover" element={<GameOver />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/victory" element={<Victory />} />
-        <Route path="/question/:id" element={<Questions />} />
-      
-    </Routes>
-    </div>
+        {/* Logo */}
+        <img
+          src="/codezilla_logo.png"
+          alt="Codezilla Logo"
+          className="logo-background"
+        />
+
+        {/* Logout Button */}
+        <LogoutButton />
+
+        {/* Routes */}
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/map" element={<GameMap />} />
+          <Route path="/gameover" element={<GameOver />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/victory" element={<Victory />} />
+          <Route path="/question/:id" element={<Questions />} />
+        </Routes>
+      </div>
     </Router>
   );
 };
