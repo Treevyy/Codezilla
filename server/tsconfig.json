@@ -13,6 +13,6 @@
       "@/*": ["src/*"] // Map the '@' alias to the 'src' directory
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/server.ts"],
   "exclude": ["node_modules"]
 }
