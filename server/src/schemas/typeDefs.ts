@@ -39,6 +39,7 @@ const typeDefs = gql`
     me: User
     generateQuestion(track: String!, level: String!, minion: String!): Question
     characters: [Character]!
+
   }
 
   type Mutation {
@@ -46,6 +47,7 @@ const typeDefs = gql`
     login(email: String!, password: String!): Auth
     createCharacter(name: String!, picture: String!, voice: String!): Character
     deleteCharacter(id: ID!): Character
+    updateStats(isCorrect: Boolean!): User
   }
 `;
 

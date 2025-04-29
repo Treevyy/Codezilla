@@ -90,6 +90,20 @@ const resolvers = {
     deleteCharacter: async (_: any, { id }: { id: string }) => {
       return await Character.findByIdAndDelete(id);
     },
+    updateStats: async (_parent: any, { isCorrect }: { isCorrect: boolean }, context: any) => {
+  if (!context.user) {
+    throw new AuthenticationError('You need to be logged in!');
+  }
+
+  const update = isCorrect
+    ? { $inc: { correctAnswers: 1 } }
+    : { $inc: { wrongAnswers: 1 } };
+
+  const user = await User.findByIdAndUpdate(context.user._id, update, { new: true });
+
+  return user;
+},
+
   },
 };
 
