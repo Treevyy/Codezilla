@@ -36,7 +36,7 @@ dotenv.config();
       const startApolloServer = async () => {
         await server.start();
         await db;
-        
+
       app.use(express.static('public')); // serve generated mp3 file
       app.use(express.urlencoded({ extended: false }));
       app.use(express.json());
@@ -48,10 +48,10 @@ dotenv.config();
       ));
       // if we're in production, serve client/build as static assets
       if (process.env.NODE_ENV === 'production') {
-        app.use(express.static(path.join(dirname, '../client/build')));
+        app.use(express.static(path.join(__dirname, '../client/build')));
       
         app.get('*', (_req: Request, res: Response) => {
-          res.sendFile(path.join(dirname, '../client/dist/index.html'));
+          res.sendFile(path.join(__dirname, '../client/dist/index.html'));
         });
       }
 
