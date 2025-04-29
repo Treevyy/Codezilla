@@ -8,7 +8,8 @@ interface MinionProps {
   name: string;
   questionId: string;
   goToQuestion: (questionId: string) => void;
-  size: number,
+  size: number;
+  selectedMinionId: string | null;
 }
 
 const Minion: React.FC<MinionProps> = ({ 
@@ -19,12 +20,15 @@ const Minion: React.FC<MinionProps> = ({
   name, 
   questionId, 
   goToQuestion,
+  selectedMinionId,
  }) => {
+  const isSelected = selectedMinionId === id;
   
   return (
     <div
       id={`minion-${id}`}
-      className="minion"
+      className={`minion ${isSelected ? 'selected' : ''}`}
+      
       style={{
         position: 'absolute',
         top: `${yPercent}%`,
@@ -41,6 +45,7 @@ const Minion: React.FC<MinionProps> = ({
       <img
         src={image}
         alt={name}
+        className='minion-image'
         style={{
           width: '100%',
           height: '100%',

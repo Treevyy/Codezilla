@@ -9,10 +9,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Minion from './Minions';
 import "../../styles/codezilla.css";
+import drDanImg from '../../../avatars/drdan2.png';
+import flameImg from '../../assets/flame.png';
+
+const selectedAvatar = localStorage.getItem('selectedAvatar');
+const username = localStorage.getItem('username') || 'Player';
 
 const GameMap: React.FC = () => {
   const navigate = useNavigate();
   const [completedPaths, setCompletedPaths] = useState<string[]>([]);
+  const [selectedMinionId, setSelectedMinionId] = useState<string | null>(null);
 
   const minions = [
     {
@@ -41,9 +47,9 @@ const GameMap: React.FC = () => {
     },
     {
       id: '4',
-      xPercent: 72,
-      yPercent: 50,
-      image: '/minions/monster-left.png',
+      xPercent: 70,
+      yPercent: 45,
+      image: '/minions/pie-thon.png',
       name: 'Pie-Thon',
       questionId: 'q4',
     },
@@ -78,7 +84,10 @@ const GameMap: React.FC = () => {
       const pathId = `${nodes[currentIndex].id}-${nodes[currentIndex + 1].id}`;
       setCompletedPaths(prev => [...prev, pathId]);
     }
-
+  const minion = minions.find(m => m.questionId === questionId);
+    if (minion) {
+      setSelectedMinionId(minion.id);
+    }  
     navigate(`/question/${questionId}`);
   };
 
@@ -103,7 +112,7 @@ const GameMap: React.FC = () => {
             />
           );
         })}
-
+      
         {/* GLOWING OUTER CIRCLE + DARKER INNER CIRCLE */}
         {nodes.map((node, index) => {
           const isCompleted = index < completedPaths.length;
@@ -128,6 +137,42 @@ const GameMap: React.FC = () => {
           );
         })}
       </svg>
+      <div className="dr-dan-wrapper">
+  <div className="glow-circle"></div>
+  <img src={drDanImg} alt="Dr. Dan" className="dr-dan-image" />
+</div>
+
+{selectedAvatar && (
+  <div className="player-avatar-wrapper">
+    <div className="player-glow-circle"></div>
+    <img src={selectedAvatar} alt="Your Avatar" className="player-avatar" />
+
+  
+    <div className="player-info-wrapper">
+      <div className="player-info-box">
+        <p className="player-name">{username}</p>
+        <p className="player-level">Level 1</p>
+      </div>
+
+      <div className="learning-info-box">
+        <p className='learning-title'> Studying</p>
+        <p className="learning-text">Coding Bootcamp</p>
+      </div>
+      {/*  Lifeline Box */}
+      <div className='flames'>
+      <div className="lifeline-info-box">
+        <div className="lifeline-flames">
+        <p className='learning-title'> Life Lines</p>
+        <img src={flameImg} alt="Flame 1" />
+        <img src={flameImg} alt="Flame 2" />
+        <img src={flameImg} alt="Flame 3" />
+        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {/* MINIONS */}
       {minions.map((minion) => (
@@ -140,8 +185,11 @@ const GameMap: React.FC = () => {
           name={minion.name}
           questionId={minion.questionId}
           goToQuestion={goToQuestion}
+          size={120}
+          selectedMinionId={selectedMinionId}
         />
       ))}
+     
     </div>
   );
 };
