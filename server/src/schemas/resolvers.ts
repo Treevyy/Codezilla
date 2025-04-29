@@ -1,4 +1,5 @@
 import User from '../models/User';
+import Character from '../models/Characters';
 import { signToken } from '../utils/auth';
 import { AuthenticationError } from 'apollo-server-express';
 
@@ -23,15 +24,27 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
+    users: async () => {
+      return await User.find();
+    },
+    user: async (_: any, { username }: { username: string }) => {
+      return await User.findOne({ username });
+    },
+    characters: async () => {
+      return await Character.find();
+    },
+    character: async (_: any, { id }: { id: string }) => {
+      return await Character.findById(id);
+    },
   },
   Mutation: {
     addUser: async (_parent: any, { input }: AddUserArgs) => {
-      const user = await User.create(input) as { username: string; email: string; _id: string };
+      const user = await User.create(input);
       const token = signToken(user.username, user.email, user._id);
       return { token, user };
     },
     login: async (_parent: any, { email, password }: LoginUserArgs) => {
-      const user = await User.findOne({ email }) as { username: string; email: string; _id: string; isCorrectPassword: (password: string) => Promise<boolean> };
+      const user = await User.findOne({ email });
 
       if (!user) {
         throw new AuthenticationError('Invalid credentials');
@@ -45,6 +58,13 @@ const resolvers = {
 
       const token = signToken(user.username, user.email, user._id);
       return { token, user };
+    },
+    createCharacter: async (_: any, { name, picture, voice }: { name: string, picture: string, voice: string }) => {
+      const newCharacter = new Character({ name, picture, voice });
+      return await newCharacter.save();
+    },
+    deleteCharacter: async (_: any, { id }: { id: string }) => {
+      return await Character.findByIdAndDelete(id);
     },
   },
 };

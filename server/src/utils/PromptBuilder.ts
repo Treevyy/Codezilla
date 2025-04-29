@@ -1,4 +1,6 @@
-import { FallbackQuestion, fallbackQuestion } from "@/utils/fallbackQuestions";
+
+import { FallbackQuestion, fallbackQuestion } from "../utils/fallbackQuestions";
+
 
 export class PromptBuilder {
   /**
