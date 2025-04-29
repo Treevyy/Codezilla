@@ -1,4 +1,6 @@
+
 import { FallbackQuestion, fallbackQuestion } from "../utils/fallbackQuestions";
+
 
 export class PromptBuilder {
   /**
@@ -153,23 +155,28 @@ Correct Answer: ...
 /**
  * Parses the raw OpenAI response into question, choices, and answer
  */
-export function parseOpenAIResponse(raw: string) {
-  const lines = raw.split("\n").map(line => line.trim()).filter(Boolean);
+// Removed duplicate implementation of parseOpenAIResponse to resolve redeclaration error.
 
-  let question = "";
-  const choices: string[] = [];
-  let answer = "";
-
-  for (const line of lines) {
-    if (/^question:/i.test(line)) {
-      question = line.replace(/^question:\s*/i, "");
-    } else if (/^[A-D]\)/.test(line)) {
-      choices.push(line);
-    } else if (/^correct answer:/i.test(line)) {
-      const match = line.match(/[A-D]/i);
-      if (match) answer = match[0].toUpperCase();
-    }
+  export function parseOpenAIResponse(raw: string) {
+	const lines = raw.split('\n').map(line => line.trim()).filter(line => line !== '');
+  
+	let question = '';
+	const choices: string[] = [];
+	let answer = '';
+  
+	for (const line of lines) {
+	  if (line.toLowerCase().startsWith('question:')) {
+		question = line.replace(/^question:\s*/i, '').trim();
+	  } else if (/^[a-dA-D]\)/.test(line)) {
+		choices.push(line);
+	  } else if (line.toLowerCase().startsWith('correct answer')) {
+		const match = line.match(/[A-D]/i);
+		if (match) {
+		  answer = match[0].toUpperCase();
+		}
+	  }
+	}
+  
+	return { question, choices, answer };
   }
-
-  return { question, choices, answer };
-}
+  

@@ -1,21 +1,15 @@
-import './codezilla.css';
+import "../../styles/codezilla.css";
 
 const GameOverPage = ({
-  backgroundUrl = '/assets/background.jpg',
-  logoUrl       = '/assets/codezilla-logo.png',
-  avatarUrl     = '/assets/player-avatar.png',
-  codezillaUrl  = '/assets/codezilla.png',
+  backgroundUrl = 'client/background/codezilla_bkgd.png',
+  avatarUrl     = 'client/avatars/avatar4.png',
+  codezillaUrl  = 'client/minions/codezilla2.png',
 }) => {
   return (
     <div
       className="game-over-page"
       style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
-      <img
-        className="game-over-logo"
-        src={logoUrl}
-        alt="Codezilla Logo"
-      />
 
       <div className="game-over-container">
         <h1 className="game-over-title">Game Over!</h1>
