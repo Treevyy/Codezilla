@@ -1,10 +1,10 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+import express, { type Request, type Response } from 'express';
+
 import dotenv from 'dotenv';
 import { OpenAI } from 'openai';
-// import fs from 'fs';
-// import path from 'path';
-import { ApolloServer } from 'apollo-server-express';
+
+import path from 'path';
+import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import typeDefs from './schemas/typeDefs';
 import resolvers from './schemas/resolvers';
@@ -33,16 +33,19 @@ dotenv.config();
         resolvers,
       });
 
-      await server.start();
+      const startApolloServer = async () => {
+        await server.start();
+        await db;
+        
+      app.use(express.static('public')); // serve generated mp3 file
       app.use(express.urlencoded({ extended: false }));
       app.use(express.json());
-      app.use(express.static('public')); // serve generated mp3 file
+      
       app.use('/graphql', expressMiddleware(server as any,
         {
           context: authenticateToken as any
         }
       ));
-      
       // if we're in production, serve client/build as static assets
       if (process.env.NODE_ENV === 'production') {
         app.use(express.static(path.join(dirname, '../client/build')));
