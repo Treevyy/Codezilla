@@ -2,7 +2,6 @@
 // src/components/screens/GameMap.tsx
 
 // IMPORT LIBRARIES
-import * as React from 'react';
 
 import React, { useState } from 'react';
 

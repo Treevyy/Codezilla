@@ -16,16 +16,6 @@ const typeDefs = gql`
     password: String!
   }
 
-<<<<<<< HEAD
-=======
-  type Character {
-    _id: ID!
-    name: String!
-    picture: String!
-    voice: String!
-  }
-
->>>>>>> d7567a5c20d729e2d5c004a2d70be9176db8ea33
   type Auth {
     token: ID!
     user: User
@@ -36,18 +26,19 @@ const typeDefs = gql`
     choices: [String!]!
     answer: String!
   }
+  type Character {
+    _id: ID
+    name: String!
+    picture: String!
+    voice: String!
+  }
 
   type Query {
     users: [User]
     user(username: String!): User
     me: User
-<<<<<<< HEAD
     generateQuestion(track: String!, level: String!, minion: String!): Question
-=======
-    updateStats(isCorrect: Boolean!): User
-    characters: [Character]
-    character(id: ID!): Character
->>>>>>> d7567a5c20d729e2d5c004a2d70be9176db8ea33
+    characters: [Character]!
   }
 
   type Mutation {

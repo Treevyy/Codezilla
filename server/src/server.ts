@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 import { OpenAI } from 'openai';
 import path from 'path';
 import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { typeDefs, resolvers } from './schemas/index.js';
-import db from './config/connections.js';
-import { authenticateToken } from './utils/auth.js';
+// import { expressMiddleware } from '@apollo/server/express4';
+import { typeDefs, resolvers } from './schemas/index';
+import db from './config/connections';
+// import { authenticateToken } from './utils/auth.js';
 
 dotenv.config();
 
@@ -27,19 +27,19 @@ const startApolloServer = async () => {
   app.use(express.json());
 
   // Apollo Server v4 middleware with correct typing
-  app.use(
-    '/graphql',
-    expressMiddleware(server) as unknown as express.RequestHandler, // TypeScript workaround
-    {
-      context: async ({ req }: { req: Request }) => {
-        const user = await authenticateToken(_req);
-        return { user };
-      },
+  const authenticateToken = async ({ req }: { req: Request }) => {
+    const token = (req.headers.authorization as string | undefined)?.split(' ')[1];
+    let user = null;
+  
+    if (token) {
+      try {
+        const { verifyToken } = require('./utils/auth');
+        user = verifyToken(token);
+      } catch (err) {
+        console.error('Token verification failed:', err);
+      }
     }
-  );
-
-  // Serve static files in production
-  if (process.env.NODE_ENV === 'production') {
+  // Serve static files in production 
     app.use(express.static(path.join(__dirname, '../client/dist')));
     app.get('*', (_req: Request, res: Response) => {
       res.sendFile(path.join(__dirname, '../client/dist/index.html'));
