@@ -1,4 +1,4 @@
-import { FallbackQuestion } from "@/utils/fallbackQuestions";
+import { FallbackQuestion, fallbackQuestion } from "../utils/fallbackQuestions";
 
 export class PromptBuilder {
   /**
@@ -144,7 +144,7 @@ Correct Answer: ...
    * If the LLM API fails, pick a random fallback question
    */
   static getFallbackQuestion(minionName: string): FallbackQuestion {
-    const pool = fallbackQuestions[minionName] || [];
+    const pool = fallbackQuestion[minionName] || [];
     const idx = Math.floor(Math.random() * pool.length);
     return pool[idx];
   }
