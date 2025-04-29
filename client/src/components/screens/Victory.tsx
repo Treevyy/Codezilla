@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import "../../styles/codezilla.css";
 
 export default function VictoryPage({
@@ -5,12 +6,21 @@ export default function VictoryPage({
   avatarUrl       = 'client/avatars/avatar4.png',
   confettiUrl     = 'client/background/confetti_image.jpg',
 }) {
+  const navigate = useNavigate();
+
+  const handlePlayAgain = () => {
+    navigate('/game');
+  };
+
+  const handleMainMenu = () => {
+    navigate('/');
+  };
+
   return (
     <div
       className="victory-page"
       style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
-
       <div className="victory-container">
         {/* Confetti overlay */}
         <div
@@ -31,10 +41,24 @@ export default function VictoryPage({
         </h2>
 
         <p className="victory-cta">
-          you are a coding master!
+          You are a coding master!
         </p>
+
+        <div className="victory-actions">
+          <button
+            className="btn play-again-btn"
+            onClick={handlePlayAgain}
+          >
+            Play Again!
+          </button>
+          <button
+            className="btn main-menu-btn"
+            onClick={handleMainMenu}
+          >
+            Main Menu
+          </button>
+        </div>
       </div>
     </div>
   );
 }
-
