@@ -31,7 +31,6 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
-<<<<<<< HEAD
     generateQuestion: async (_parent: any, args: { track: string; level: string; minion: string }) => {
       const { track, level, minion } = args;
       const prompt = PromptBuilder.getPrompt(track, level);
@@ -59,19 +58,6 @@ const resolvers = {
           answer: fallback.choices[fallback.correctIndex],
         };
       }
-=======
-    users: async () => {
-      return await User.find();
-    },
-    user: async (_: any, { username }: { username: string }) => {
-      return await User.findOne({ username });
-    },
-    characters: async () => {
-      return await Character.find();
-    },
-    character: async (_: any, { id }: { id: string }) => {
-      return await Character.findById(id);
->>>>>>> d7567a5c20d729e2d5c004a2d70be9176db8ea33
     },
   },
 
@@ -104,6 +90,20 @@ const resolvers = {
     deleteCharacter: async (_: any, { id }: { id: string }) => {
       return await Character.findByIdAndDelete(id);
     },
+    updateStats: async (_parent: any, { isCorrect }: { isCorrect: boolean }, context: any) => {
+  if (!context.user) {
+    throw new AuthenticationError('You need to be logged in!');
+  }
+
+  const update = isCorrect
+    ? { $inc: { correctAnswers: 1 } }
+    : { $inc: { wrongAnswers: 1 } };
+
+  const user = await User.findByIdAndUpdate(context.user._id, update, { new: true });
+
+  return user;
+},
+
   },
 };
 
