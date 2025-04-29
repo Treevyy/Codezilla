@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 import { FallbackQuestion, fallbackQuestion } from "../utils/fallbackQuestions";
+=======
+
+import { FallbackQuestion, fallbackQuestion } from "../utils/fallbackQuestions";
+
+>>>>>>> d7567a5c20d729e2d5c004a2d70be9176db8ea33
 
 export class PromptBuilder {
   /**

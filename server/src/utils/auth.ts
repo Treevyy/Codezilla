@@ -11,7 +11,7 @@ interface JwtPayload {
 }
 
 export const authMiddleware = ({ req }: { req: any }) => {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.get('authorization');
 
   if (authHeader) {
     const token = authHeader.split(' ')[1];
@@ -42,20 +42,25 @@ export const authMiddleware = ({ req }: { req: any }) => {
   return { user: null };
 };
 
-export const authenticateToken = (token: string) => {
-  const secretKey = process.env.JWT_SECRET_KEY || '';
+export const authenticateToken = async ({ req }: { req: Request }) => {
+  const authHeader = req.headers.authorization;
+  let user = null;
+  console.log('AUTH HEADER', authHeader);
 
-  if (!token) {
-    throw new Error('No token provided');
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+    console.log('TOKEN', token);
+    const secretKey = process.env.JWT_SECRET_KEY || '';
+
+    try {
+      user = jwt.verify(token, secretKey) as JwtPayload;
+      console.log('USER', user);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  try {
-    const user = jwt.verify(token, secretKey) as JwtPayload;
-    return user;
-  } catch (err) {
-    console.error('Invalid token:', err);
-    throw new Error('Invalid or expired token');
-  }
+  return { user };
 };
 
 export const signToken = (username: string, email: string, _id: unknown) => {
