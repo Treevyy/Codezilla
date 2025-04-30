@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import NarrationModal from "@/components/NarrationModal"; 
+import { useState, useEffect } from "react"; 
 import SoundPlayer from "@/components/SoundPlayer"; 
 import { preloadSounds } from "../utils/preloadSounds"; 
 import { getRandomDanismAndSound } from "../utils/handleAnswer";
