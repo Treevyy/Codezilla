@@ -1,12 +1,11 @@
-
 // src/components/screens/GameMap.tsx
 
 // IMPORT LIBRARIES
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Minion from './Minions';
-import "../../styles/codezilla.css";
+import { preloadSounds } from '../../Utils/preloadSounds';
+import '../../styles/codezilla.css';
 import drDanImg from '../../../avatars/drdan2.png';
 import flameImg from '../../assets/flame.png';
 
@@ -16,6 +15,22 @@ const username = localStorage.getItem('username') || 'Player';
 const GameMap: React.FC = () => {
   const navigate = useNavigate();
   const [completedPaths, setCompletedPaths] = useState<string[]>([]);
+
+  // ✅ Preload Dr. Dan audio files on mount
+  useEffect(() => {
+    preloadSounds([
+      '/audio/Dan_correct/Dan-correct-1.wav',
+      '/audio/Dan_correct/Dan-correct-2.wav',
+      '/audio/Dan_correct/Dan-correct-3.wav',
+      '/audio/Dan_correct/correctStar.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-1.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-2.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-3.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-4.wav',
+      '/audio/Dan_incorrect/firstincorrect.wav',
+      '/audio/5inarow.wav'
+    ]);
+  }, []);
   const [selectedMinionId, setSelectedMinionId] = useState<string | null>(null);
 
   const minions = [
@@ -62,20 +77,18 @@ const GameMap: React.FC = () => {
   ];
 
   const nodes = [
-    { id: 'node1', xPercent: 18, yPercent: 28 }, // START LEFT
-    { id: 'node2', xPercent: 18, yPercent: 48 }, // SMALL DOWN
-    { id: 'node3', xPercent: 35, yPercent: 48 }, // SMALL RIGHT
-    { id: 'node4', xPercent: 35, yPercent: 68 }, // SMALL DOWN
-    { id: 'node5', xPercent: 53, yPercent: 68 }, // SMALL RIGHT
-    { id: 'node6', xPercent: 53, yPercent: 48 }, // SMALL UP
-    { id: 'node7', xPercent: 70, yPercent: 48 }, // SMALL RIGHT
-    { id: 'node8', xPercent: 70, yPercent: 28 }, // SMALL UP
-    { id: 'node9', xPercent: 88, yPercent: 28 }, // CODEZILLA
+    { id: 'node1', xPercent: 18, yPercent: 28 },
+    { id: 'node2', xPercent: 18, yPercent: 48 },
+    { id: 'node3', xPercent: 35, yPercent: 48 },
+    { id: 'node4', xPercent: 35, yPercent: 68 },
+    { id: 'node5', xPercent: 53, yPercent: 68 },
+    { id: 'node6', xPercent: 53, yPercent: 48 },
+    { id: 'node7', xPercent: 70, yPercent: 48 },
+    { id: 'node8', xPercent: 70, yPercent: 28 },
+    { id: 'node9', xPercent: 88, yPercent: 28 },
   ];
 
   const goToQuestion = (questionId: string) => {
-    console.log('Go to question', questionId);
-
     const currentIndex = minions.findIndex(m => m.questionId === questionId);
 
     if (currentIndex < nodes.length - 1) {
@@ -91,10 +104,7 @@ const GameMap: React.FC = () => {
 
   return (
     <div className="game-map">
-    
-      {/* SVG LINES AND CIRCLES 2*/}
       <svg className="map-lines">
-        {/* LINES BETWEEN NODES */}
         {nodes.map((node, index) => {
           const nextNode = nodes[index + 1];
           if (!nextNode) return null;
@@ -110,6 +120,7 @@ const GameMap: React.FC = () => {
             />
           );
         })}
+
       
         {/* GLOWING OUTER CIRCLE + DARKER INNER CIRCLE */}
         {nodes.map((node, index) => {
@@ -117,14 +128,12 @@ const GameMap: React.FC = () => {
 
           return (
             <g key={`node-${node.id}`}>
-              {/* OUTER GLOW CIRCLE */}
               <circle
                 cx={`${node.xPercent}%`}
                 cy={`${node.yPercent}%`}
                 r="3.5%"
                 className={`map-node-outer ${isCompleted ? 'completed' : ''}`}
               />
-              {/* INNER DARKER CIRCLE */}
               <circle
                 cx={`${node.xPercent}%`}
                 cy={`${node.yPercent}%`}
@@ -172,7 +181,6 @@ const GameMap: React.FC = () => {
       )}
 
 
-      {/* MINIONS */}
       {minions.map((minion) => (
         <Minion
           key={minion.id}
@@ -183,6 +191,7 @@ const GameMap: React.FC = () => {
           name={minion.name}
           questionId={minion.questionId}
           goToQuestion={goToQuestion}
+          size={3} // Add the size property with an appropriate value
           size={120}
           selectedMinionId={selectedMinionId}
         />
