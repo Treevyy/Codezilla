@@ -53,7 +53,7 @@ export const fallbackQuestion: Record<string, FallbackQuestion[]> = {
     }
   ],
 
-  Typerroruss: [
+  Typerrorasaurus: [
     {
       question: "What happens if you try to call `.toUpperCase()` on an undefined value in JavaScript?",
       choices: ["It returns undefined", "It throws a TypeError", "It logs 'undefined'", "It returns null"],

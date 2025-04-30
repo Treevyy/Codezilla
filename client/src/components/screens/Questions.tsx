@@ -1,8 +1,7 @@
-// src/components/screens/Questions.tsx
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AnswerResultModal from '../AnswerResultModal';
+import ReactMarkdown from 'react-markdown';
 
 interface Question {
   question: string;
@@ -21,10 +20,10 @@ const Questions: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState('');
 
   const minionMap: Record<string, string> = {
-    q1: 'Nullbyte',
+    q1: 'NullByte',
     q2: 'Dbug',
     q3: 'Typerrorasaurus',
-    q4: 'Pie-Thon',
+    q4: 'PieThon',
     q5: 'Codezilla',
   };
 
@@ -34,32 +33,67 @@ const Questions: React.FC = () => {
   useEffect(() => {
     if (!id) return;
 
-    fetch('/api/question', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        minion: minionMap[id] || 'Nullbyte',
+    let didCancel = false;
+
+    const fetchQuestion = async () => {
+      const payload = {
+        minion: minionMap[id] || 'NullByte',
         level,
         track,
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.question) {
-          const raw = data.question;
-          setQuestion({
-            question: raw.question,
-            choices: raw.choices.map((choice: string, index: number) => ({
-              label: String.fromCharCode(65 + index),
-              value: choice,
-            })),
-            correctAnswer: raw.answer,
-          });
+      };
+
+      console.log('🚀 Sending POST to /api/question with:', payload);
+
+      try {
+        const res = await fetch('/api/question', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const text = await res.text();
+        console.log('🧾 Raw response:', text);
+
+        if (didCancel) return;
+
+        const data = JSON.parse(text);
+        if (!data?.question) {
+          console.warn('⚠️ No question found in response');
+          return;
         }
-      })
-      .catch(err => {
-        console.error('Failed to load question:', err);
-      });
+
+        const raw = data.question;
+        const parsedChoices = raw.choices.map((choice: string, index: number) => ({
+          label: String.fromCharCode(65 + index),
+          value: choice.replace(/^[A-Da-d]\)\s*/, ''),
+        }));
+
+        const correctFromLetter =
+          raw.answer?.length === 1
+            ? raw.choices[raw.answer.charCodeAt(0) - 65]?.replace(/^[A-Da-d]\)\s*/, '')
+            : raw.answer;
+
+        const correctFromIndex =
+          typeof raw.correctIndex === 'number'
+            ? raw.choices[raw.correctIndex]
+            : null;
+            console.log("🔍 Final parsed question for markdown:", raw.question);
+
+        setQuestion({
+          question: raw.question,
+          choices: parsedChoices,
+          correctAnswer: correctFromLetter || correctFromIndex || '',
+        });
+      } catch (err) {
+        console.error('❌ Fetch or parse error:', err);
+      }
+    };
+
+    fetchQuestion();
+
+    return () => {
+      didCancel = true;
+    };
   }, [id]);
 
   const getRandomAudio = (isCorrect: boolean): string => {
@@ -94,15 +128,37 @@ const Questions: React.FC = () => {
 
   return (
     <div className="question-screen p-6 max-w-xl mx-auto text-center">
-      <h1 className="text-2xl font-bold mb-4">Question {id}</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        Question {id?.replace('q', '') || ''}
+      </h1>
+
       {!question ? (
         <p>Loading question...</p>
       ) : (
         <>
-          <p className="mb-6">{question.question}</p>
+          <div className="mb-6 text-white text-lg text-left whitespace-pre-wrap">
+            <ReactMarkdown
+              components={{
+                code({ inline, className, children, ...props }: { inline?: boolean; className?: string; children?: React.ReactNode }) {
+                  return inline ? (
+                    <code className="bg-gray-700 px-1 rounded text-sm" {...props}>
+                      {children}
+                    </code>
+                  ) : (
+                    <pre className="bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg mb-4">
+                      <code {...props}>{children}</code>
+                    </pre>
+                  );
+                },
+              }}
+            >
+              {question.question}
+            </ReactMarkdown>
+          </div>
+
           <form onSubmit={handleSubmit}>
-            {question.choices.map((choice) => (
-              <label key={choice.value} className="block mb-2 cursor-pointer">
+            {question.choices.map((choice, index) => (
+              <label key={index} className="block mb-2 cursor-pointer">
                 <input
                   type="radio"
                   name="answer"
