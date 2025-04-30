@@ -1,10 +1,12 @@
-// src/components/Login.tsx
+// src/components/screens/Login.tsx
 import React from 'react';
-import "../../styles/codezilla.css";
 import { useNavigate } from 'react-router-dom';
+import { useBodyClass } from '../../Utils/useBodyClass';
+import "../../styles/codezilla.css";
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
+  useBodyClass('login-background');
 
   const handleLogin = () => {
     navigate('/signup');

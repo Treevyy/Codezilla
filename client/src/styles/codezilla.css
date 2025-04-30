@@ -1,12 +1,25 @@
 /* BACKGROUND */
-body {
+/* body {
     background-image: url('/codezilla_bkgd.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+} */
+body.login-background {
+    background-color: #000; 
+    background-image: url('/background/codezilla_bkgd.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
 }
 
+body.intro-background {
+    background-color: black; 
+}
+  
+  
 html,
 body,
 #root {
@@ -642,4 +655,34 @@ body,
     background-color: #cc0000;
     transform: scale(1.05);
   }
+
+  /* VIDEO INTRO */
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   
+  .intro-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+body.signup-background,
+body.map-background,
+body.victory-background,
+body.gameover-background,
+body.quiz-background {
+  background-color: #000;
+  background-image: url('/background/codezilla_bkgd.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
