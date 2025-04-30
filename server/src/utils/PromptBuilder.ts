@@ -1,86 +1,31 @@
 import { FallbackQuestion, fallbackQuestion } from "../utils/fallbackQuestions";
 
 export class PromptBuilder {
-  /**
-   * Return the appropriate LLM prompt based on difficulty level
-   */
   static getPrompt(track: string, level: string): string {
     switch (level) {
-      case 'easy':
+      case "easy":
         return this.nullbytePrompt(track);
-      case 'medium':
+      case "medium":
         return this.dbugPrompt(track);
-      case 'medium-hard':
-        return this.typerrorusPrompt(track);
-      case 'hard':
+      case "medium-hard":
+        return this.typerrorasaurusPrompt(track);
+      case "hard":
         return this.pieThonPrompt(track);
-      case 'boss':
+      case "boss":
         return this.codezillaPrompt(track);
       default:
         return this.genericPrompt(track, level);
     }
   }
 
-  /**
-   * Generic prompt for unspecified levels
-   */
   private static genericPrompt(track: string, level: string): string {
     return `
 Generate a concise ${level} JavaScript multiple-choice coding question for a ${track}-level developer.
 
 Requirements:
 - Focus on real-world coding concepts.
-- Limit the question to 2 sentences max.
-- Include 4 answer choices labeled A through D.
-- Clearly indicate the correct answer at the end using: "Correct Answer: B"
-
-Format:
-Question: ...
-A) ...
-B) ...
-C) ...
-D) ...
-Correct Answer: ...
-`;
-  }
-
-  /**
-   * Easy-level question prompt for NullByte
-   */
-  private static nullbytePrompt(track: string): string {
-    return `
-You're facing **NullByte**, the minion of bugs and broken logic.
-
-Generate an **easy-level** HTML, JavaScript, or CSS multiple-choice coding question that focuses on **debugging or fixing broken code** for a ${track}-level developer.
-
-Requirements:
-- Limit to 2 sentences max.
-- Use a real JavaScript bug or common mistake (like misuse of == vs ===, off-by-one errors, etc).
-- Provide 4 answer options labeled A-D.
-- Indicate the correct answer at the end using: "Correct Answer: X"
-
-Format:
-Question: ...
-A) ...
-B) ...
-C) ...
-D) ...
-Correct Answer: ...
-`;
-  }
-
-  /**
-   * Medium-level debugging prompt
-   */
-  private static dbugPrompt(track: string): string {
-    return `
-You're facing **D'bug**, the glitchy minion of confusion.
-
-Generate a **medium-level** multiple-choice JavaScript coding question that challenges the player to understand code behavior, logic, or flow — suitable for a ${track}-level developer.
-
-Requirements:
-- Limit the question to 2 sentences max.
-- Avoid fantasy themes.
+- Wrap code examples in triple backticks (like \`\`\`js ... \`\`\`).
+- Use 3 sentences max.
 - Provide 4 answer choices labeled A-D.
 - End with "Correct Answer: X"
 
@@ -93,44 +38,99 @@ D) ...
 Correct Answer: ...
 `;
   }
-  private static typerrorusPrompt(track: string): string {
+
+  private static nullbytePrompt(track: string): string {
     return `
-  You're facing **Typerrorus**, the minion of type mismatches and sneaky runtime errors.
-  
-  Generate a **medium-to-hard-level** JavaScript multiple-choice coding question that focuses on **type coercion, type errors, or data type handling**, suitable for a ${track}-level developer.
-  
-  Requirements:
-  - Focus on tricky issues like implicit type conversion, typeof quirks, or common runtime type bugs.
-  - Limit the question to 2 sentences max.
-  - Provide 4 answer choices labeled A-D.
-  - Clearly indicate the correct answer at the end using: "Correct Answer: X"
-  
-  Format:
-  Question: ...
-  A) ...
-  B) ...
-  C) ...
-  D) ...
-  Correct Answer: ...
-  `;
+You're facing NullByte, a mischievous bug in the system.
+
+Generate an **easy-level** JavaScript, HTML, or CSS multiple-choice question that focuses on **debugging common beginner mistakes**, suitable for a ${track}-level developer.
+
+Requirements:
+- Use simple logic bugs like = vs ==, typos, off-by-one, etc.
+- If code is needed, keep it minimal and readable. Avoid full blocks unless essential.
+- DO NOT wrap in markdown unless needed.
+- Limit to 3 sentences.
+- Provide 4 answers labeled A-D.
+- End with "Correct Answer: X"
+
+Format:
+Question: ...
+A) ...
+B) ...
+C) ...
+D) ...
+Correct Answer: ...
+`;
   }
-  
-  /**
-   * Hard-level Python prompt
-   */
+
+  private static dbugPrompt(track: string): string {
+    return `
+You're facing Dbug, a slippery logic breaker.
+
+Generate a **medium-level** JavaScript multiple-choice question that tests logical flow, control structures, or debugging quirks. Tailored for a ${track}-level developer.
+
+Requirements:
+- Include a short code snippet wrapped in \`\`\`js ... \`\`\`.
+- Avoid fantasy or themed references.
+- 3 sentences max.
+- Provide 4 answers labeled A-D.
+- End with "Correct Answer: X"
+
+Format:
+Question: ...
+\`\`\`js
+...
+\`\`\`
+A) ...
+B) ...
+C) ...
+D) ...
+Correct Answer: ...
+`;
+  }
+
+  private static typerrorasaurusPrompt(track: string): string {
+    return `
+You're facing Typerrorasaurus, a creature born of broken types.
+
+Generate a **medium-to-hard** JavaScript multiple-choice question involving **type coercion**, **runtime errors**, or **typeof traps**, suitable for a ${track}-level developer.
+
+Requirements:
+- Include a code snippet wrapped in \`\`\`js ... \`\`\`.
+- Limit to 3 sentences.
+- Provide 4 answers labeled A-D.
+- End with "Correct Answer: X"
+
+Format:
+Question: ...
+\`\`\`js
+...
+\`\`\`
+A) ...
+B) ...
+C) ...
+D) ...
+Correct Answer: ...
+`;
+  }
+
   private static pieThonPrompt(track: string): string {
     return `
-You’re up against **Pie-thon**, the toughest minion before the boss.
+You’re up against PieThon, a logic-twisting adversary.
 
-Generate a **hard-level** Python multiple-choice question involving complex concepts (e.g. closures, asynchronous behavior, or prototypes), aimed at a ${track}-level developer.
+Generate a **hard-level** Python multiple-choice question targeting concepts like **list comprehensions**, **scope**, or **async behavior**, for a ${track}-level developer.
 
 Requirements:
-- Be concise (2 sentences max).
-- Provide 4 answer options labeled A-D.
-- Clearly indicate the correct answer.
+- Code must be inside \`\`\`python ... \`\`\`.
+- 3 sentences max.
+- Provide 4 answers labeled A-D.
+- End with "Correct Answer: X"
 
 Format:
 Question: ...
+\`\`\`python
+...
+\`\`\`
 A) ...
 B) ...
 C) ...
@@ -139,22 +139,23 @@ Correct Answer: ...
 `;
   }
 
-  /**
-   * Boss-level Codezilla prompt
-   */
   private static codezillaPrompt(track: string): string {
     return `
-This is the final challenge: **Codezilla**, the boss monster of code.
+You've reached Codezilla, the final test.
 
-Generate a **boss-level** multiple-choice MERN Stack question that requires deep understanding of advanced topics (e.g. event loop, execution context, performance optimization), tailored for a ${track}-level developer.
+Generate a **boss-level** full-stack JavaScript or MERN-stack multiple-choice question focused on topics like **event loop**, **execution context**, **asynchronous behavior**, or **React/Node internals**, for a ${track}-level developer.
 
 Requirements:
-- Keep it under 2 sentences.
-- Avoid fantasy language and be strictly technical.
-- Include 4 choices labeled A-D and mark the correct answer.
+- Code block required (use \`\`\`js ... \`\`\`).
+- No fantasy. Pure technical.
+- 3 sentences max.
+- Answers A-D. End with "Correct Answer: X"
 
 Format:
 Question: ...
+\`\`\`js
+...
+\`\`\`
 A) ...
 B) ...
 C) ...
@@ -163,9 +164,6 @@ Correct Answer: ...
 `;
   }
 
-  /**
-   * If the LLM API fails, pick a random fallback question
-   */
   static getFallbackQuestion(minionName: string): FallbackQuestion {
     const pool = fallbackQuestion[minionName] || [];
     const idx = Math.floor(Math.random() * pool.length);
@@ -173,31 +171,25 @@ Correct Answer: ...
   }
 }
 
-/**
- * Parses the raw OpenAI response into question, choices, and answer
- */
-// Removed duplicate implementation of parseOpenAIResponse to resolve redeclaration error.
+export function parseOpenAIResponse(raw: string) {
+  const lines = raw.split("\n").map((line) => line.trim()).filter((line) => line !== "");
 
-  export function parseOpenAIResponse(raw: string) {
-	const lines = raw.split('\n').map(line => line.trim()).filter(line => line !== '');
-  
-	let question = '';
-	const choices: string[] = [];
-	let answer = '';
-  
-	for (const line of lines) {
-	  if (line.toLowerCase().startsWith('question:')) {
-		question = line.replace(/^question:\s*/i, '').trim();
-	  } else if (/^[a-dA-D]\)/.test(line)) {
-		choices.push(line);
-	  } else if (line.toLowerCase().startsWith('correct answer')) {
-		const match = line.match(/[A-D]/i);
-		if (match) {
-		  answer = match[0].toUpperCase();
-		}
-	  }
-	}
-  
-	return { question, choices, answer };
+  let question = "";
+  const choices: string[] = [];
+  let answer = "";
+
+  for (const line of lines) {
+    if (line.toLowerCase().startsWith("question:")) {
+      question = line.replace(/^question:\s*/i, "").trim();
+    } else if (/^[a-dA-D]\)/.test(line)) {
+      choices.push(line);
+    } else if (line.toLowerCase().startsWith("correct answer")) {
+      const match = line.match(/[A-D]/i);
+      if (match) {
+        answer = match[0].toUpperCase();
+      }
+    }
   }
-  
+
+  return { question, choices, answer };
+}
