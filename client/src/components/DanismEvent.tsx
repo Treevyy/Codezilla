@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import NarrationModal from "@/components/NarrationModal"; 
 import SoundPlayer from "@/components/SoundPlayer"; 
-import { preloadSounds } from "../Utils/preloadSounds"; 
+import { preloadSounds } from "../utils/preloadSounds"; 
 import { getRandomDanismAndSound } from "../utils/handleAnswer";
 
 

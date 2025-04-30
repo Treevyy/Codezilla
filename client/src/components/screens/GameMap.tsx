@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Minion from './Minions';
-import { preloadSounds } from '../../Utils/preloadSounds';
+import { preloadSounds } from '../../utils/preloadSounds';
 import '../../styles/codezilla.css';
 import drDanImg from '../../../avatars/drdan2.png';
 import flameImg from '../../assets/flame.png';
@@ -191,7 +191,6 @@ const GameMap: React.FC = () => {
           name={minion.name}
           questionId={minion.questionId}
           goToQuestion={goToQuestion}
-          size={3} // Add the size property with an appropriate value
           size={120}
           selectedMinionId={selectedMinionId}
         />

@@ -1,7 +1,6 @@
 import express, { RequestHandler } from 'express';
 import OpenAI from 'openai';
 import { PromptBuilder, parseOpenAIResponse } from '../../utils/PromptBuilder';
-import { fallbackQuestion } from '../../utils/fallbackQuestions';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
