@@ -1,9 +1,10 @@
 import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { OpenAI } from 'openai';
+import openaiRoutes from './routes/api/openai';
 import path from 'path';
 import { ApolloServer } from '@apollo/server';
-// import { expressMiddleware } from '@apollo/server/express4';
+import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index';
 import db from './config/connections';
 // import { authenticateToken } from './utils/auth.js';
@@ -25,6 +26,8 @@ const startApolloServer = async () => {
 
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
+  app.use('/api', openaiRoutes);
+  app.use('/graphql', expressMiddleware(server));
 
   // Apollo Server v4 middleware with correct typing
   const authenticateToken = async ({ req }: { req: Request }) => {

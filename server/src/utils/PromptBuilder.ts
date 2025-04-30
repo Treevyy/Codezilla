@@ -9,9 +9,11 @@ export class PromptBuilder {
       case 'easy':
         return this.nullbytePrompt(track);
       case 'medium':
-        return this.debugPrompt(track);
+        return this.dbugPrompt(track);
+      case 'medium-hard':
+        return this.typerrorusPrompt(track);
       case 'hard':
-        return this.pythonPrompt(track);
+        return this.pieThonPrompt(track);
       case 'boss':
         return this.codezillaPrompt(track);
       default:
@@ -70,7 +72,7 @@ Correct Answer: ...
   /**
    * Medium-level debugging prompt
    */
-  private static debugPrompt(track: string): string {
+  private static dbugPrompt(track: string): string {
     return `
 You're facing **D'bug**, the glitchy minion of confusion.
 
@@ -91,11 +93,32 @@ D) ...
 Correct Answer: ...
 `;
   }
-
+  private static typerrorusPrompt(track: string): string {
+    return `
+  You're facing **Typerrorus**, the minion of type mismatches and sneaky runtime errors.
+  
+  Generate a **medium-to-hard-level** JavaScript multiple-choice coding question that focuses on **type coercion, type errors, or data type handling**, suitable for a ${track}-level developer.
+  
+  Requirements:
+  - Focus on tricky issues like implicit type conversion, typeof quirks, or common runtime type bugs.
+  - Limit the question to 2 sentences max.
+  - Provide 4 answer choices labeled A-D.
+  - Clearly indicate the correct answer at the end using: "Correct Answer: X"
+  
+  Format:
+  Question: ...
+  A) ...
+  B) ...
+  C) ...
+  D) ...
+  Correct Answer: ...
+  `;
+  }
+  
   /**
    * Hard-level Python prompt
    */
-  private static pythonPrompt(track: string): string {
+  private static pieThonPrompt(track: string): string {
     return `
 You’re up against **Pie-thon**, the toughest minion before the boss.
 
