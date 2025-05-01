@@ -87,12 +87,7 @@ const DanismEvent = () => {
         </button>
       </div>
 
-      {/* 🧬 Narration Modal */}
-      <NarrationModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        text={dialogText}
-      />
+      
 
       {/* 🎶 SoundPlayer */}
       {audioSrc && (
