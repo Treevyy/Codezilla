@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { OpenAI } from 'openai';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
@@ -37,10 +38,15 @@ const startApolloServer = async () => {
   });
 
   // ✅ Serve static files in production (if applicable)
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-  app.get('*', (_req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-  });
+  const clientDistPath = path.join(__dirname, '../../client/dist');
+  if (fs.existsSync(clientDistPath)) {
+    app.use(express.static(clientDistPath));
+    app.get('*', (_req: Request, res: Response) => {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+    });
+  } else {
+    console.warn('⚠️  Static files not found. Ensure the client has been built.');
+  }
 
   app.listen(PORT, () => {
     console.log(`✅ Server is running on http://localhost:${PORT}`);

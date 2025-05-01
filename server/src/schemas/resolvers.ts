@@ -27,7 +27,7 @@ const resolvers = {
   Query: {
     me: async (_parent: any, _args: any, context: any) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id });
+        return User.findById({ _id: context.user._id });
       }
       throw new AuthenticationError('You need to be logged in!');
     },
@@ -68,18 +68,18 @@ const resolvers = {
       return { token, user };
     },
     login: async (_parent: any, { email, password }: LoginUserArgs) => {
+      console.log(`🔐 Login attempt for: ${email}`); // ✅ Safe logging
+    
       const user = await User.findOne({ email });
-
       if (!user) {
         throw new AuthenticationError('Invalid credentials');
       }
-
+    
       const isPasswordCorrect = await user.isCorrectPassword(password);
-
       if (!isPasswordCorrect) {
         throw new AuthenticationError('Invalid credentials');
       }
-
+    
       const token = signToken(user.username, user.email, user._id);
       return { token, user };
     },
