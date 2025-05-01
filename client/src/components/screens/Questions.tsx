@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AnswerResultModal from '../AnswerResultModal';
 import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface Question {
+  snippet?: string;
   question: string;
   choices: { label: string; value: string }[];
   correctAnswer: string;
@@ -27,22 +30,23 @@ const Questions: React.FC = () => {
     q5: 'Codezilla',
   };
 
-  const track = 'JavaScript';
-  const level = 'easy';
+  const difficultyMap: Record<string, string> = {
+    NullByte: 'easy',
+    Dbug: 'medium',
+    Typerrorasaurus: 'medium-hard',
+    PieThon: 'hard',
+    Codezilla: 'boss',
+  };
 
   useEffect(() => {
     if (!id) return;
-
     let didCancel = false;
 
     const fetchQuestion = async () => {
-      const payload = {
-        minion: minionMap[id] || 'NullByte',
-        level,
-        track,
-      };
-
-      console.log('🚀 Sending POST to /api/question with:', payload);
+      const minion = minionMap[id] || 'NullByte';
+      const level = difficultyMap[minion] || 'easy';
+      const track = minion === 'PieThon' ? 'Python' : 'JavaScript';
+      const payload = { minion, level, track };
 
       try {
         const res = await fetch('/api/question', {
@@ -52,15 +56,10 @@ const Questions: React.FC = () => {
         });
 
         const text = await res.text();
-        console.log('🧾 Raw response:', text);
-
         if (didCancel) return;
 
         const data = JSON.parse(text);
-        if (!data?.question) {
-          console.warn('⚠️ No question found in response');
-          return;
-        }
+        if (!data?.question) return;
 
         const raw = data.question;
         const parsedChoices = raw.choices.map((choice: string, index: number) => ({
@@ -77,20 +76,19 @@ const Questions: React.FC = () => {
           typeof raw.correctIndex === 'number'
             ? raw.choices[raw.correctIndex]
             : null;
-            console.log("🔍 Final parsed question for markdown:", raw.question);
 
         setQuestion({
+          snippet: raw.snippet,
           question: raw.question,
           choices: parsedChoices,
           correctAnswer: correctFromLetter || correctFromIndex || '',
         });
       } catch (err) {
-        console.error('❌ Fetch or parse error:', err);
+        console.error('❌ Error:', err);
       }
     };
 
     fetchQuestion();
-
     return () => {
       didCancel = true;
     };
@@ -127,8 +125,8 @@ const Questions: React.FC = () => {
   const handleBack = () => navigate('/map');
 
   return (
-    <div className="question-screen p-6 max-w-xl mx-auto text-center">
-      <h1 className="text-2xl font-bold mb-4">
+    <div className="question-screen max-h-screen overflow-y-auto p-6 max-w-xl mx-auto text-center">
+      <h1 className="text-xl font-semibold mb-2">
         Question {id?.replace('q', '') || ''}
       </h1>
 
@@ -136,10 +134,29 @@ const Questions: React.FC = () => {
         <p>Loading question...</p>
       ) : (
         <>
-          <div className="mb-6 text-white text-lg text-left whitespace-pre-wrap">
+          <div className="mb-4 text-white text-base text-left whitespace-pre-wrap">
+            {question.snippet?.trim() ? (
+              <SyntaxHighlighter
+                language="javascript"
+                style={vscDarkPlus}
+                showLineNumbers
+                customStyle={{
+                  border: '2px solid red',
+                  borderRadius: '0.5rem',
+                  marginBottom: '1rem',
+                  maxHeight: '220px',
+                  overflowY: 'auto',
+                  paddingRight: '1rem',
+                  fontSize: '0.75rem',
+                }}
+              >
+                {question.snippet}
+              </SyntaxHighlighter>
+            ) : null}
+
             <ReactMarkdown
               components={{
-                code({ inline, className, children, ...props }: { inline?: boolean; className?: string; children?: React.ReactNode }) {
+                code({ inline, children, ...props }: { inline?: boolean; children?: React.ReactNode }) {
                   return inline ? (
                     <code className="bg-gray-700 px-1 rounded text-sm" {...props}>
                       {children}
@@ -156,29 +173,30 @@ const Questions: React.FC = () => {
             </ReactMarkdown>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="text-left flex flex-col items-start gap-2">
             {question.choices.map((choice, index) => (
-              <label key={index} className="block mb-2 cursor-pointer">
+              <label key={index} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="answer"
                   value={choice.value}
                   checked={selectedAnswer === choice.value}
                   onChange={(e) => setSelectedAnswer(e.target.value)}
-                  className="mr-2"
                 />
-                {choice.label}: {choice.value}
+                <span>{choice.label}: {choice.value}</span>
               </label>
             ))}
-            <button
-              type="submit"
-              disabled={!selectedAnswer}
-              className={`mt-4 px-4 py-2 rounded text-white ${
-                selectedAnswer ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'
-              }`}
-            >
-              Submit Answer
-            </button>
+            <div className="w-full flex justify-center">
+              <button
+                type="submit"
+                disabled={!selectedAnswer}
+                className={`mt-4 px-4 py-2 rounded text-white ${
+                  selectedAnswer ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'
+                }`}
+              >
+                Submit Answer
+              </button>
+            </div>
           </form>
         </>
       )}

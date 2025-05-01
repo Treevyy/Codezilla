@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+//import { X } from "lucide-react";
 
 import { cn } from "@/utils/utils";
 
@@ -10,7 +11,7 @@ const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 
 const DialogPortal = ({ ...props }: DialogPrimitive.DialogPortalProps) => (
-  <DialogPrimitive.Portal {...props} />
+  < DialogPrimitive.Portal {...props} />
 );
 
 const DialogOverlay = React.forwardRef<
@@ -19,7 +20,7 @@ const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    className={cn(
+  className={cn(
       "fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm",
       className
     )}

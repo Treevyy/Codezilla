@@ -128,6 +128,17 @@ export const fallbackQuestion: Record<string, FallbackQuestion[]> = {
       ],
       correctIndex: 1,
       difficulty: "boss",
+    },
+    {
+      question: "What does this full-stack function return when called with `{ userId: '123' }`?\n\n```js\nasync function getUser(req, res) {\n  const { userId } = req.body;\n  const user = await db.collection('users').findOne({ id: userId });\n  res.json(user);\n}\n```",
+      choices: [
+        "A) A resolved Promise with an empty object",
+        "B) A rejected Promise with a TypeError",
+        "C) A MongoDB document for user 123",
+        "D) Undefined, because of a missing return"
+      ],
+      correctIndex: 2,
+      difficulty: "boss"
     }
   ],
 };
