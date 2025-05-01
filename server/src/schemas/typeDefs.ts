@@ -12,7 +12,7 @@ const typeDefs = gql`
 
   input UserInput {
     username: String!
-    email: String!
+    selectedAvatar: String!
     password: String!
   }
 
@@ -44,7 +44,7 @@ const typeDefs = gql`
 
   type Mutation {
     addUser(input: UserInput!): Auth
-    login(email: String!, password: String!): Auth
+    login(username: String!, password: String!): Auth
     createCharacter(name: String!, picture: String!, voice: String!): Character
     deleteCharacter(id: ID!): Character
     updateStats(isCorrect: Boolean!): User
@@ -52,3 +52,10 @@ const typeDefs = gql`
 `;
 
 export default typeDefs;
+
+
+// input UserInput {
+//   username: String!
+//   email: String!
+//   password: String!
+// }

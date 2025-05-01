@@ -13,13 +13,15 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 interface AddUserArgs {
   input: {
     username: string;
-    email: string;
+    // email: string;
+    selectedAvatar: string;
     password: string;
   };
 }
 
 interface LoginUserArgs {
-  email: string;
+  // email: string;
+  username: string;
   password: string;
 }
 
@@ -64,11 +66,17 @@ const resolvers = {
   Mutation: {
     addUser: async (_parent: any, { input }: AddUserArgs) => {
       const user = await User.create(input);
-      const token = signToken(user.username, user.email, user._id);
+      const token = signToken(
+        user.username, 
+        // user.email, 
+        user._id
+      );
       return { token, user };
     },
-    login: async (_parent: any, { email, password }: LoginUserArgs) => {
-      const user = await User.findOne({ email });
+    // login: async (_parent: any, { email, password }: LoginUserArgs) => {
+    //   const user = await User.findOne({ email });
+    login: async (_parent: any, { username, password }: LoginUserArgs) => {
+      const user = await User.findOne({ username });
 
       if (!user) {
         throw new AuthenticationError('Invalid credentials');
@@ -80,7 +88,12 @@ const resolvers = {
         throw new AuthenticationError('Invalid credentials');
       }
 
-      const token = signToken(user.username, user.email, user._id);
+      const token = signToken(
+        user.username, 
+        // user.email, 
+        user._id
+      );
+      
       return { token, user };
     },
     createCharacter: async (_: any, { name, picture, voice }: { name: string, picture: string, voice: string }) => {
