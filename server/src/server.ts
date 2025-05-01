@@ -7,45 +7,71 @@ import { expressMiddleware } from '@apollo/server/express4';
 import openaiRoutes from './routes/api/openai';
 import { typeDefs, resolvers } from './schemas/index';
 import db from './config/connections';
+import jwt from 'jsonwebtoken';
+import fs from 'fs';
 
 dotenv.config();
 
-const app: Application = express(); 
+const app: Application = express();
 const PORT = process.env.PORT || 3001;
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
+// ✅ Apollo Server setup
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 
+// ✅ Apollo context: Auth with Bearer Token
+const getContext = async ({ req }: { req: Request }) => {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+
+  if (!token) return { user: null };
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET as string);
+    return { user };
+  } catch (err) {
+    console.warn('❌ Invalid JWT');
+    return { user: null };
+  }
+};
+
 const startApolloServer = async () => {
   await server.start();
   await db();
 
-  // ✅ Middlewares
+  // ✅ Middleware
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  // ✅ Register routes
-  app.use('/api', openaiRoutes);             // Your router (POST /api/question, /api/tts)
-  app.use('/graphql', expressMiddleware(server));  // Apollo GraphQL
+  // ✅ API routes
+  app.use('/api', openaiRoutes);
 
-  // ✅ Optional root test route
+  // ✅ Apollo middleware
+  app.use('/graphql', expressMiddleware(server, { context: getContext }));
+
+  // ✅ Health check
   app.get('/', (_req: Request, res: Response) => {
     res.send('🎙️ Codezilla server is up!');
   });
 
-  // ✅ Serve static files in production (if applicable)
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-  app.get('*', (_req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-  });
+  const clientDistPath = path.join(__dirname, '../../client/dist');
+  if (fs.existsSync(clientDistPath)) {
+    app.use(express.static(clientDistPath));
+    app.get('*', (_req: Request, res: Response) => {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+    });
+  } else {
+    console.warn('⚠️  Static files not found. Ensure the client has been built.');
+  }
 
   app.listen(PORT, () => {
     console.log(`✅ Server is running on http://localhost:${PORT}`);
-    console.log(`✅ GraphQL endpoint is available at http://localhost:${PORT}/graphql`);
+    console.log(`✅ GraphQL endpoint available at http://localhost:${PORT}/graphql`);
   });
 };
 
 startApolloServer();
+//commits//
