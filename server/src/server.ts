@@ -1,79 +1,77 @@
 import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { OpenAI } from 'openai';
 import path from 'path';
+import { OpenAI } from 'openai';
 import { ApolloServer } from '@apollo/server';
-// import { expressMiddleware } from '@apollo/server/express4';
+import { expressMiddleware } from '@apollo/server/express4';
+import openaiRoutes from './routes/api/openai';
 import { typeDefs, resolvers } from './schemas/index';
 import db from './config/connections';
-// import { authenticateToken } from './utils/auth.js';
+import jwt from 'jsonwebtoken';
+import fs from 'fs';
 
 dotenv.config();
 
-const app: Application = express(); 
+const app: Application = express();
 const PORT = process.env.PORT || 3001;
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
+// ✅ Apollo Server setup
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 
+// ✅ Apollo context: Auth with Bearer Token
+const getContext = async ({ req }: { req: Request }) => {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+
+  if (!token) return { user: null };
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET as string);
+    return { user };
+  } catch (err) {
+    console.warn('❌ Invalid JWT');
+    return { user: null };
+  }
+};
+
 const startApolloServer = async () => {
   await server.start();
   await db();
 
+  // ✅ Middleware
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  // Apollo Server v4 middleware with correct typing
-  const authenticateToken = async ({ req }: { req: Request }) => {
-    const token = (req.headers.authorization as string | undefined)?.split(' ')[1];
-    let user = null;
-  
-    if (token) {
-      try {
-        const { verifyToken } = require('./utils/auth');
-        user = verifyToken(token);
-      } catch (err) {
-        console.error('Token verification failed:', err);
-      }
-    }
-  // Serve static files in production 
-    app.use(express.static(path.join(__dirname, '../client/dist')));
-    app.get('*', (_req: Request, res: Response) => {
-      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-    });
-  }
+  // ✅ API routes
+  app.use('/api', openaiRoutes);
 
-  // POST /api/tts - OpenAI text-to-speech
-  app.post('/api/tts', async (req: Request, res: Response) => {
-    const { text } = req.body;
-    try {
-      const speech = await openai.audio.speech.create({
-        model: 'tts-1',
-        voice: 'onyx',
-        input: text,
-      });
+  // ✅ Apollo middleware
+  app.use('/graphql', expressMiddleware(server, { context: getContext }));
 
-      const buffer = Buffer.from(await speech.arrayBuffer());
-      res.set({ 'Content-Type': 'audio/mpeg' });
-      res.send(buffer);
-    } catch (err) {
-      console.error('❌ TTS error:', err);
-      res.status(500).send('TTS failed');
-    }
-  });
-
-  // Root route
+  // ✅ Health check
   app.get('/', (_req: Request, res: Response) => {
     res.send('🎙️ Codezilla server is up!');
   });
 
+  const clientDistPath = path.join(__dirname, '../../client/dist');
+  if (fs.existsSync(clientDistPath)) {
+    app.use(express.static(clientDistPath));
+    app.get('*', (_req: Request, res: Response) => {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+    });
+  } else {
+    console.warn('⚠️  Static files not found. Ensure the client has been built.');
+  }
+
   app.listen(PORT, () => {
     console.log(`✅ Server is running on http://localhost:${PORT}`);
-    console.log(`✅ GraphQL endpoint is available at http://localhost:${PORT}/graphql`);
+    console.log(`✅ GraphQL endpoint available at http://localhost:${PORT}/graphql`);
   });
 };
 
 startApolloServer();
+//commits//

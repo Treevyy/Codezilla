@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import NarrationModal from "@/components/NarrationModal"; 
+import { useState, useEffect } from "react"; 
 import SoundPlayer from "@/components/SoundPlayer"; 
-import { preloadSounds } from "../Utils/preloadSounds"; 
-import { getRandomDanism, getSoundPath } from "../Utils/handleAnswer"; 
+import { preloadSounds } from "../utils/preloadSounds"; 
+import { getRandomDanismAndSound } from "../utils/handleAnswer";
+
 
 const DanismEvent = () => {
   const [showModal, setShowModal] = useState(false);
@@ -60,12 +60,14 @@ const DanismEvent = () => {
 
   // 🔥 Handle when player answers something
   const triggerDanism = (isCorrect: boolean) => {
-    setDialogText(getRandomDanism(isCorrect)); // Pick random quote
-    setAudioSrc(getSoundPath(isCorrect));      // Play random correct/wrong sound immediately
-    setFallbackAudio(null); // Reset fallback
-    setShowModal(true);     // Open modal
-    setPlaying(true);       // Start playing
+    const { text, sound } = getRandomDanismAndSound(isCorrect);
+    setDialogText(text);        
+    setAudioSrc(sound);           
+    setFallbackAudio(null);       
+    setShowModal(true);           
+    setPlaying(true);             
   };
+  
 
   return (
     <>
@@ -85,12 +87,7 @@ const DanismEvent = () => {
         </button>
       </div>
 
-      {/* 🧬 Narration Modal */}
-      <NarrationModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        text={dialogText}
-      />
+      
 
       {/* 🎶 SoundPlayer */}
       {audioSrc && (

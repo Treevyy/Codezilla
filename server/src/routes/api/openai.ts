@@ -1,73 +1,105 @@
-import express from 'express';
-import type { Request, Response } from 'express';
-import { OpenAI } from 'openai';
-import { PromptBuilder } from '../../utils/PromptBuilder';
+import express, { RequestHandler } from 'express';
+import OpenAI from 'openai';
+import { PromptBuilder, parseOpenAIResponse } from '../../utils/PromptBuilder';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
 dotenv.config();
 
 const router = express.Router();
-
-/**
- * Parses the OpenAI response into a structured format.
- * @param rawResponse - The raw response content from OpenAI.
- * @returns A structured question object.
- */
-function parseOpenAIResponse(rawResponse: string): GeneratedQuestion {
-  // Example parsing logic (adjust as needed based on actual response format)
-  const [question, ...choicesAndAnswer] = rawResponse.split('\n').filter(Boolean);
-  const choices = choicesAndAnswer.slice(0, -1);
-  const answer = choicesAndAnswer[choicesAndAnswer.length - 1];
-  return { question, choices, answer };
-}
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-type GeneratedQuestion = {
-  question: string;
-  choices: string[];
-  answer: string;
-};
+// -----------------------------------------
+// Route 1: POST /api/question
+// Generate a coding question for the game
+// -----------------------------------------
+const questionHandler: RequestHandler = async (req, res) => {
+  const { minion, level, track } = req.body;
 
-/** Generate a coding question via OpenAI, with fallback */
-router.post(
-  '/generate-question',
-  async (req: Request, res: Response<GeneratedQuestion | { error: string }>) : Promise<void> => {
-    const { track, level, minion } = req.body;
-    if (!track || !level || !minion) {
-      res.status(400).json({ error: 'Missing track, level, or minion' });
+  if (!minion || !level || !track) {
+    res.status(400).json({ error: 'minion, level, and track are required in the request body.' });
+    return;
+  }
+  const prompt = PromptBuilder.getPrompt(track, level);
+
+  try {
+    const chatCompletion = await openai.chat.completions.create({
+      messages: [{ role: 'user', content: prompt }],
+      model: 'gpt-4-turbo',
+    });
+
+    const rawContent = chatCompletion.choices[0].message?.content || '';
+    const structuredQuestion = parseOpenAIResponse(rawContent);
+
+    console.log("✅ Structured Question:", structuredQuestion);
+
+    console.log("🧠 Parsed question object:", structuredQuestion);
+if (!structuredQuestion.snippet) {
+  console.warn("⚠️ Missing code snippet. AI response may not follow expected format.");
+}
+
+
+    // 🔒 Enforce code snippets for all minions except NullByte
+    const requiresSnippet = !['NullByte'].includes(minion);
+    const hasCodeBlock = rawContent.includes('```js') || rawContent.includes('```python');
+
+    if (requiresSnippet && !hasCodeBlock) {
+      console.warn(`⚠️ Response from OpenAI missing code snippet for ${minion}. Using fallback.`);
+      const fallback = PromptBuilder.getFallbackQuestion(minion);
+      return res.json({ type: 'fallback', question: fallback });
+    }
+
+    res.json({ type: 'ai', question: structuredQuestion });
+  } catch (error) {
+    console.error('OpenAI API error:', error);
+
+    const fallback = PromptBuilder.getFallbackQuestion(minion);
+    if (!fallback) {
+      res.status(500).json({ error: 'No fallback questions available for this minion.' });
       return;
     }
 
-    // Build the LLM prompt
-    const prompt = PromptBuilder.getPrompt(track, level);
-
-    try {
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 250,
-      });
-
-      // Parse the raw text into structured question/choices/answer
-      const raw = completion.choices[0].message.content ?? '';
-      const parsed = parseOpenAIResponse(raw);
-
-      res.json(parsed);
-    } catch (err) {
-      console.error('OpenAI failed, falling back:', err);
-
-      // Fallback: pick a hard-coded question
-      const fb = PromptBuilder.getFallbackQuestion(minion);
-
-      res.json({
-        question: fb.question,
-        choices: fb.choices,
-        answer: fb.choices[fb.correctIndex],
-      });
-    }
+    res.json({ type: 'fallback', question: fallback });
   }
-);
+};
 
-// ... your existing /tts route ...
+router.post('/question', questionHandler);
+
+// -----------------------------------------
+// Route 2: POST /api/tts
+// Generate Dr. Dan's voice line for feedback
+// -----------------------------------------
+const ttsHandler: RequestHandler = async (req, res) => {
+  const { text } = req.body;
+
+  if (!text) {
+    res.status(400).json({ error: "No text provided for TTS." });
+    return;
+  }
+
+  try {
+    const speechResponse = await openai.audio.speech.create({
+      model: 'tts-1',
+      voice: 'echo',
+      input: text,
+    });
+
+    const buffer = Buffer.from(await speechResponse.arrayBuffer());
+    const timestamp = Date.now();
+    const fileName = `dr-dan-${timestamp}.mp3`;
+    const filePath = path.join(__dirname, '../../public/audio', fileName);
+
+    fs.writeFileSync(filePath, buffer);
+
+    const audioUrl = `/audio/${fileName}`;
+    res.json({ audioUrl });
+  } catch (error) {
+    console.error('TTS Generation Error:', error);
+    res.status(500).json({ error: "Failed to generate Dr. Dan's voice line." });
+  }
+};
+
+router.post('/tts', ttsHandler);
 
 export default router;

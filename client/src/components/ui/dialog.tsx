@@ -2,15 +2,16 @@
 
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+//import { X } from "lucide-react";
 
-import { cn } from "@/Utils/utils";
+import { cn } from "@/utils/utils";
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 
 const DialogPortal = ({ ...props }: DialogPrimitive.DialogPortalProps) => (
-  <DialogPrimitive.Portal {...props} />
+  < DialogPrimitive.Portal {...props} />
 );
 
 const DialogOverlay = React.forwardRef<
@@ -19,7 +20,7 @@ const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    className={cn(
+  className={cn(
       "fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm",
       className
     )}
@@ -37,16 +38,13 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
   ref={ref}
   className={cn(
-    "fixed z-[70] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg rounded-2xl bg-gradient-to-b from-blue-950 to-black text-white p-6 shadow-2xl ring-4 ring-blue-400/50 transition-all duration-500 ease-in-out animate-fadeIn",
+    "fixed z-[70] bottom-[15%] right-[5%] w-[300px] rounded-xl bg-white/90 dark:bg-gray-900/90 text-black dark:text-white p-4 shadow-xl ring-2 ring-blue-400/40 animate-fadeIn",
     className
   )}
   {...props}
 >
 
       <div className="space-y-4">{children}</div>
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-        <X className="h-4 w-4" />
-      </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
 ));

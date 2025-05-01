@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Minion from './Minions';
 import { useBodyClass } from '../../Utils/useBodyClass';
+import { preloadSounds } from '../../utils/preloadSounds';
 import "../../styles/codezilla.css";
 import drDanImg from '../../../avatars/drdan2.png';
 import flameImg from '../../assets/flame.png';
@@ -16,12 +17,77 @@ const GameMap: React.FC = () => {
   const [completedPaths, setCompletedPaths] = useState<string[]>([]);
   const [selectedMinionId, setSelectedMinionId] = useState<string | null>(null);
 
+  useEffect(() => {
+    preloadSounds([
+      '/audio/Dan_correct/Dan-correct-1.wav',
+      '/audio/Dan_correct/Dan-correct-2.wav',
+      '/audio/Dan_correct/Dan-correct-3.wav',
+      '/audio/Dan_correct/correctStar.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-1.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-2.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-3.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-4.wav',
+      '/audio/Dan_incorrect/firstincorrect.wav',
+      '/audio/5inarow.wav'
+    ]);
+  }, []);
+
   const minions = [
-    { id: '1', xPercent: 17, yPercent: 25, image: '/minions/nullbyte3a.png', name: 'Nullbyte', questionId: 'q1' },
-    { id: '2', xPercent: 35, yPercent: 48, image: '/minions/dbug2a.png', name: 'Dbug', questionId: 'q2' },
-    { id: '3', xPercent: 53, yPercent: 65, image: '/minions/typerrorus.png', name: 'Typerrorasaurus', questionId: 'q3' },
-    { id: '4', xPercent: 70, yPercent: 45, image: '/minions/pie-thon.png', name: 'Pie-Thon', questionId: 'q4' },
-    { id: '5', xPercent: 87, yPercent: 27, image: '/minions/codezilla2.png', name: 'Codezilla', questionId: 'q5' }
+    {
+      id: '1',
+      xPercent: 17,
+      yPercent: 25,
+      image: '/minions/nullbyte3a.png',
+      name: 'Nullbyte',
+      questionId: 'q1',
+      taunt: "Don't blank out now... this should be easy.",
+      sound: '/public/cave-monster.mp3',
+      colorClass: 'bg-blue-600 text-white',
+    },
+    {
+      id: '2',
+      xPercent: 35,
+      yPercent: 48,
+      image: '/minions/dbug2a.png',
+      name: 'Dbug',
+      questionId: 'q2',
+      taunt: "Let's squash some bugs... or get squashed.",
+      sound: '/public/alienScream.mp3',
+      colorClass: 'bg-yellow-500 text-black',
+    },
+    {
+      id: '3',
+      xPercent: 53,
+      yPercent: 65,
+      image: '/minions/typerrorus.png',
+      name: 'Typerrorasaurus',
+      questionId: 'q3',
+      taunt: "Let’s see how you handle *this* error.",
+      sound: '/public/mad-keyboard-typing.mp3',
+      colorClass: 'bg-red-600 text-white',
+    },
+    {
+      id: '4',
+      xPercent: 70,
+      yPercent: 45,
+      image: '/minions/pie-thon.png',
+      name: 'Pie-Thon',
+      questionId: 'q4',
+      taunt: "The only slice you'll get is defeat.",
+      sound: '/public/snakeHiss.mp3',
+      colorClass: 'bg-green-700 text-white',
+    },
+    {
+      id: '5',
+      xPercent: 87,
+      yPercent: 27,
+      image: '/minions/codezilla2.png',
+      name: 'Codezilla',
+      questionId: 'q5',
+      taunt: "You dare challenge ME?",
+      sound: '/public/godzilla.roar.mp3',
+      colorClass: 'bg-purple-800 text-white',
+    },
   ];
 
   const nodes = [
@@ -64,12 +130,23 @@ const GameMap: React.FC = () => {
             />
           );
         })}
+
         {nodes.map((node, index) => {
           const isCompleted = index < completedPaths.length;
           return (
             <g key={`node-${node.id}`}>
-              <circle cx={`${node.xPercent}%`} cy={`${node.yPercent}%`} r="3.5%" className={`map-node-outer ${isCompleted ? 'completed' : ''}`} />
-              <circle cx={`${node.xPercent}%`} cy={`${node.yPercent}%`} r="3%" className="map-node-inner" />
+              <circle
+                cx={`${node.xPercent}%`}
+                cy={`${node.yPercent}%`}
+                r="3.5%"
+                className={`map-node-outer ${isCompleted ? 'completed' : ''}`}
+              />
+              <circle
+                cx={`${node.xPercent}%`}
+                cy={`${node.yPercent}%`}
+                r="3%"
+                className="map-node-inner"
+              />
             </g>
           );
         })}
@@ -119,6 +196,9 @@ const GameMap: React.FC = () => {
           goToQuestion={goToQuestion}
           size={120}
           selectedMinionId={selectedMinionId}
+          taunt={minion.taunt}
+          sound={minion.sound}
+          colorClass={minion.colorClass}
         />
       ))}
     </div>
