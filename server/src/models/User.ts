@@ -4,7 +4,8 @@ import bcrypt from 'bcrypt';
 // Define an interface for the User document
 interface IUser extends Document {
     username: string;
-    email: string;
+    // email: string;
+    selectedAvatar: string;
     password: string;
     correctAnswers: number;
     wrongAnswers: number;
@@ -20,16 +21,21 @@ const userSchema = new Schema<IUser>(
             unique: true,
             trim: true,
         },
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            match: [/.+@.+\..+/, 'Must match an email address!'],
-        },
+        // email: {
+        //     type: String,
+        //     required: true,
+        //     unique: true,
+        //     match: [/.+@.+\..+/, 'Must match an email address!'],
+        // },
         password: {
             type: String,
             required: true,
             minlength: 5,
+        },
+
+        selectedAvatar: {
+            type: String,
+            required: true,
         },
         correctAnswers: {
             type: Number,

@@ -63,8 +63,16 @@ export const authenticateToken = async ({ req }: { req: Request }) => {
   return { user };
 };
 
-export const signToken = (username: string, email: string, _id: unknown) => {
-  const payload = { username, email, _id };
+export const signToken = (
+  username: string, 
+  // email: string, 
+  _id: unknown
+) => {
+  const payload = { 
+    username, 
+    // email, 
+    _id 
+  };
   const secretKey = process.env.JWT_SECRET_KEY || '';
   const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
   console.log('Generated Token:', token); 
