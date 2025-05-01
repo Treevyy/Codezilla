@@ -21,17 +21,34 @@ const questionHandler: RequestHandler = async (req, res) => {
     res.status(400).json({ error: 'minion, level, and track are required in the request body.' });
     return;
   }
-
   const prompt = PromptBuilder.getPrompt(track, level);
 
   try {
     const chatCompletion = await openai.chat.completions.create({
       messages: [{ role: 'user', content: prompt }],
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4-turbo',
     });
 
     const rawContent = chatCompletion.choices[0].message?.content || '';
     const structuredQuestion = parseOpenAIResponse(rawContent);
+
+    console.log("✅ Structured Question:", structuredQuestion);
+
+    console.log("🧠 Parsed question object:", structuredQuestion);
+if (!structuredQuestion.snippet) {
+  console.warn("⚠️ Missing code snippet. AI response may not follow expected format.");
+}
+
+
+    // 🔒 Enforce code snippets for all minions except NullByte
+    const requiresSnippet = !['NullByte'].includes(minion);
+    const hasCodeBlock = rawContent.includes('```js') || rawContent.includes('```python');
+
+    if (requiresSnippet && !hasCodeBlock) {
+      console.warn(`⚠️ Response from OpenAI missing code snippet for ${minion}. Using fallback.`);
+      const fallback = PromptBuilder.getFallbackQuestion(minion);
+      return res.json({ type: 'fallback', question: fallback });
+    }
 
     res.json({ type: 'ai', question: structuredQuestion });
   } catch (error) {
