@@ -1,22 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import IntroPage from './components/screens/IntroPage';
 import { Login } from './components/screens/Login';
 import GameMap from './components/screens/GameMap';
 import GameOver from './components/screens/GameOver';
 import Victory from './components/screens/Victory';
 import Signup from './components/screens/Signup';
 import Questions from './components/screens/Questions';
-import IntroPage from './components/screens/IntroPage';
-
-
 import './styles/codezilla.css';
+
 
 const LogoutButton: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.clear();        
-    navigate('/signup'); 
+    navigate('/login'); 
   };   
 
   return (

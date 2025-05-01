@@ -1,5 +1,5 @@
 // src/components/screens/Login.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBodyClass } from '../../Utils/useBodyClass';
 import "../../styles/codezilla.css";
@@ -11,7 +11,10 @@ export const Login: React.FC = () => {
   const handleLogin = () => {
     navigate('/signup');
   };
-
+  useEffect(() => {
+    navigate('/login');
+  }, []);
+  
   return (
     <div className="login-wrapper">
       <div className="login-content">
