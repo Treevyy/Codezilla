@@ -1,6 +1,6 @@
-/*CREATE IMPORTS */
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// src/components/screens/Signup.tsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "../../styles/codezilla.css";
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../../graphql/mutations";
@@ -14,6 +14,7 @@ const avatarList = [
 ];
 
 const SignUp: React.FC = () => {
+  useBodyClass('signup-background');
   const navigate = useNavigate();
   const [selectedAvatar, setSelectedAvatar] = useState("");
   const [username, setUsername] = useState("");
@@ -25,10 +26,15 @@ const SignUp: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+
     if (!username.trim() || !selectedAvatar) {
       alert("Please enter a username and select an avatar before proceeding.");
       return;
     }
+
+    localStorage.setItem('selectedAvatar', selectedAvatar);
+    localStorage.setItem('username', username);
+
 
     // localStorage.setItem('selectedAvatar', selectedAvatar);
     // localStorage.setItem('username', username);
@@ -77,6 +83,33 @@ const SignUp: React.FC = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
+        <p>Select Your Avatar</p>
+        <div className="avatar-grid">
+          <div className="avatar-row">
+            {avatarList.slice(0, 3).map((avatar, index) => (
+              <img
+                key={index}
+                src={avatar}
+                alt={`Avatar ${index}`}
+                className={`avatar-option ${selectedAvatar === avatar ? 'selected' : ''}`}
+                onClick={() => setSelectedAvatar(avatar)}
+              />
+            ))}
+          </div>
+          <div className="avatar-row">
+            {avatarList.slice(3).map((avatar, index) => (
+              <img
+                key={index + 3}
+                src={avatar}
+                alt={`Avatar ${index + 3}`}
+                className={`avatar-option ${selectedAvatar === avatar ? 'selected' : ''}`}
+                onClick={() => setSelectedAvatar(avatar)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <button className="signup-button" type="submit">Enter the Game</button>
         <p>Select Your Avatar</p>
         <div className="avatar-grid">
           <div className="avatar-row">

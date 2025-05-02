@@ -1,11 +1,9 @@
-// src/components/screens/GameMap.tsx
-
-// IMPORT LIBRARIES
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Minion from './Minions';
+import { useBodyClass } from '../../Utils/useBodyClass';
 import { preloadSounds } from '../../utils/preloadSounds';
-import '../../styles/codezilla.css';
+import "../../styles/codezilla.css";
 import drDanImg from '../../../avatars/drdan2.png';
 import flameImg from '../../assets/flame.png';
 
@@ -14,9 +12,11 @@ const username = localStorage.getItem('username') || 'Player';
 
 const GameMap: React.FC = () => {
   const navigate = useNavigate();
-  const [completedPaths, setCompletedPaths] = useState<string[]>([]);
+  useBodyClass('login-background');
 
-  // ✅ Preload Dr. Dan audio files on mount
+  const [completedPaths, setCompletedPaths] = useState<string[]>([]);
+  const [selectedMinionId, setSelectedMinionId] = useState<string | null>(null);
+
   useEffect(() => {
     preloadSounds([
       '/audio/Dan_correct/Dan-correct-1.wav',
@@ -31,7 +31,6 @@ const GameMap: React.FC = () => {
       '/audio/5inarow.wav'
     ]);
   }, []);
-  const [selectedMinionId, setSelectedMinionId] = useState<string | null>(null);
 
   const minions = [
     {
@@ -105,15 +104,12 @@ const GameMap: React.FC = () => {
 
   const goToQuestion = (questionId: string) => {
     const currentIndex = minions.findIndex(m => m.questionId === questionId);
-
     if (currentIndex < nodes.length - 1) {
       const pathId = `${nodes[currentIndex].id}-${nodes[currentIndex + 1].id}`;
       setCompletedPaths(prev => [...prev, pathId]);
     }
     const minion = minions.find(m => m.questionId === questionId);
-    if (minion) {
-      setSelectedMinionId(minion.id);
-    }  
+    if (minion) setSelectedMinionId(minion.id);
     navigate(`/question/${questionId}`);
   };
 
@@ -123,7 +119,6 @@ const GameMap: React.FC = () => {
         {nodes.map((node, index) => {
           const nextNode = nodes[index + 1];
           if (!nextNode) return null;
-
           return (
             <line
               key={`line-${node.id}-${nextNode.id}`}
@@ -136,10 +131,8 @@ const GameMap: React.FC = () => {
           );
         })}
 
-        {/* GLOWING OUTER CIRCLE + DARKER INNER CIRCLE */}
         {nodes.map((node, index) => {
           const isCompleted = index < completedPaths.length;
-
           return (
             <g key={`node-${node.id}`}>
               <circle
@@ -158,6 +151,7 @@ const GameMap: React.FC = () => {
           );
         })}
       </svg>
+
       <div className="dr-dan-wrapper">
         <div className="glow-circle"></div>
         <img src={drDanImg} alt="Dr. Dan" className="dr-dan-image" />
@@ -167,22 +161,19 @@ const GameMap: React.FC = () => {
         <div className="player-avatar-wrapper">
           <div className="player-glow-circle"></div>
           <img src={selectedAvatar} alt="Your Avatar" className="player-avatar" />
-
           <div className="player-info-wrapper">
             <div className="player-info-box">
               <p className="player-name">{username}</p>
               <p className="player-level">Level 1</p>
             </div>
-
             <div className="learning-info-box">
-              <p className='learning-title'> Studying</p>
+              <p className='learning-title'>Studying</p>
               <p className="learning-text">Coding Bootcamp</p>
             </div>
-            {/*  Lifeline Box */}
             <div className='flames'>
               <div className="lifeline-info-box">
                 <div className="lifeline-flames">
-                  <p className='learning-title'> Life Lines</p>
+                  <p className='learning-title'>Life Lines</p>
                   <img src={flameImg} alt="Flame 1" />
                   <img src={flameImg} alt="Flame 2" />
                   <img src={flameImg} alt="Flame 3" />

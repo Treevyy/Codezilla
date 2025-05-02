@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import "../../styles/codezilla.css";
 
+
 const GameOverPage = ({
-  backgroundUrl = 'client/background/codezilla_bkgd.png',
+  // backgroundUrl = 'client/background/codezilla_bkgd.png',
   avatarUrl     = 'client/avatars/avatar4.png',
   codezillaUrl  = 'client/minions/codezilla2.png',
 }) => {
@@ -21,7 +22,7 @@ const GameOverPage = ({
   return (
     <div
       className="game-over-page"
-      style={{ backgroundImage: `url(${backgroundUrl})` }}
+      // style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
       <div className="game-over-container">
         <h1 className="game-over-title">Game Over!</h1>
