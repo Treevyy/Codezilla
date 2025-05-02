@@ -4,7 +4,7 @@ import "../../styles/codezilla.css";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "../../graphql/mutations";
-import { useBodyClass } from "../../utils/useBodyClass";
+import { useBodyClass } from "../../Utils/useBodyClass";
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
