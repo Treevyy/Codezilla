@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import "../../styles/codezilla.css";
 
 export default function VictoryPage({
-  backgroundUrl   = 'client/background/codezilla_bkgd.png',
+  // backgroundUrl   = 'client/background/codezilla_bkgd.png',
   avatarUrl       = 'client/avatars/avatar4.png',
   confettiUrl     = 'client/background/confetti_image.jpg',
 }) {
@@ -19,7 +19,7 @@ export default function VictoryPage({
   return (
     <div
       className="victory-page"
-      style={{ backgroundImage: `url(${backgroundUrl})` }}
+      // style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
       <div className="victory-container">
         {/* Confetti overlay */}

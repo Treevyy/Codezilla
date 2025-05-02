@@ -1,55 +1,47 @@
-// src/components/Login.tsx
-import React from "react";
+// src/components/screens/Login.tsx
+import React, { useState,  } from "react";
 import "../../styles/codezilla.css";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "../../graphql/mutations";
-import { useState } from "react";
+import { useBodyClass } from "../../Utils/useBodyClass";
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
+  useBodyClass('login-background'); // ✅ YOUR background image class
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // create a function to handle the mutation
   const [login] = useMutation(LOGIN);
 
-  const handleLogin = async (e:any) => {
-   e.preventDefault();
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-   console.log(username)
-   console.log(password)
+    try {
+      const response = await login({
+        variables: { username, password }
+      });
 
-  try {
-    const response = await login({
-      variables: {
-        username: username,
-        password: password,
-      },
-    });
+      const token = response.data.login.token;
+      localStorage.setItem('token', token);
 
-    const token = response.data.login.token;
-
-
-    localStorage.setItem('token', token);
-    console.log(token)
-
-    if(token) {
-      navigate('/map');
+      if (token) {
+        navigate('/map');
+      }
+    } catch (err) {
+      console.error("Login failed", err);
+      alert("Login failed. Please check your username and password.");
     }
-  } catch(err) {
-    console.error("Login failed", err);
-    alert("Login failed. Please check your username and password.");
-  }
-
   };
+
+  const goToSignup = () => navigate('/signup');
 
   return (
     <div className="login-wrapper">
       <div className="login-content">
         <form className="question-box" onSubmit={handleLogin}>
           <h1>Login</h1>
-          
+
           <input 
             type="text" 
             placeholder="username" 
@@ -66,11 +58,10 @@ export const Login: React.FC = () => {
           />
           <button type="submit">Login</button>
 
-          
           <p>Not a player yet?</p>
-          <a href="/signup" className="signup-link">
-            <button type="button" className="signup-button">Sign Up</button>
-          </a>
+          <button type="button" className="signup-button" onClick={goToSignup}>
+            Sign Up!
+          </button>
         </form>
       </div>
     </div>
