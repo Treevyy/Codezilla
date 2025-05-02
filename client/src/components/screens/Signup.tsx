@@ -13,6 +13,16 @@ const avatarList = [
   "/avatars/shawna.png",
 ];
 
+// Utility hook to set a class on the body element
+const useBodyClass = (className: string) => {
+  React.useEffect(() => {
+    document.body.classList.add(className);
+    return () => {
+      document.body.classList.remove(className);
+    };
+  }, [className]);
+};
+
 const SignUp: React.FC = () => {
   useBodyClass('signup-background');
   const navigate = useNavigate();
