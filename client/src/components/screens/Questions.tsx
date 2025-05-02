@@ -4,7 +4,7 @@ import AnswerResultModal from '../AnswerResultModal';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { preloadSounds } from '../../utils/preloadSounds'; // ✅ Preload helper
+import { preloadSounds } from '../../utils/preloadSounds';
 
 interface Question {
   snippet?: string;
@@ -23,7 +23,6 @@ const Questions: React.FC = () => {
   const [userWasCorrect, setUserWasCorrect] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
 
-  // ✅ Preload audio on component mount
   useEffect(() => {
     preloadSounds([
       '/audio/Dan_correct/Dan-correct-1.wav',
@@ -34,24 +33,15 @@ const Questions: React.FC = () => {
       '/audio/Dan_incorrect/Dan-incorrect-2.wav',
       '/audio/Dan_incorrect/Dan-incorrect-3.wav',
       '/audio/Dan_incorrect/Dan-incorrect-4.wav',
-      '/audio/Dan_incorrect/firstincorrect.wav',
+      '/audio/Dan_incorrect/firstincorrect.wav'
     ]);
   }, []);
 
   const minionMap: Record<string, string> = {
-    q1: 'NullByte',
-    q2: 'Dbug',
-    q3: 'Typerrorasaurus',
-    q4: 'PieThon',
-    q5: 'Codezilla',
+    q1: 'NullByte', q2: 'Dbug', q3: 'Typerrorasaurus', q4: 'PieThon', q5: 'Codezilla',
   };
-
   const difficultyMap: Record<string, string> = {
-    NullByte: 'easy',
-    Dbug: 'medium',
-    Typerrorasaurus: 'medium-hard',
-    PieThon: 'hard',
-    Codezilla: 'boss',
+    NullByte: 'easy', Dbug: 'medium', Typerrorasaurus: 'medium-hard', PieThon: 'hard', Codezilla: 'boss',
   };
 
   useEffect(() => {
@@ -83,15 +73,11 @@ const Questions: React.FC = () => {
           value: choice.replace(/^[A-Da-d]\)\s*/, ''),
         }));
 
-        const correctFromLetter =
-          raw.answer?.length === 1
-            ? raw.choices[raw.answer.charCodeAt(0) - 65]?.replace(/^[A-Da-d]\)\s*/, '')
-            : raw.answer;
+        const correctFromLetter = raw.answer?.length === 1
+          ? raw.choices[raw.answer.charCodeAt(0) - 65]?.replace(/^[A-Da-d]\)\s*/, '')
+          : raw.answer;
 
-        const correctFromIndex =
-          typeof raw.correctIndex === 'number'
-            ? raw.choices[raw.correctIndex]
-            : null;
+        const correctFromIndex = typeof raw.correctIndex === 'number' ? raw.choices[raw.correctIndex] : null;
 
         setQuestion({
           snippet: raw.snippet,
@@ -105,9 +91,7 @@ const Questions: React.FC = () => {
     };
 
     fetchQuestion();
-    return () => {
-      didCancel = true;
-    };
+    return () => { didCancel = true; };
   }, [id]);
 
   const getRandomAudio = (isCorrect: boolean): string => {
@@ -115,14 +99,14 @@ const Questions: React.FC = () => {
       '/audio/Dan_correct/Dan-correct-1.wav',
       '/audio/Dan_correct/Dan-correct-2.wav',
       '/audio/Dan_correct/Dan-correct-3.wav',
-      '/audio/Dan_correct/correctStar.wav',
+      '/audio/Dan_correct/Dan-correct-4.wav'
     ];
     const incorrectClips = [
       '/audio/Dan_incorrect/Dan-incorrect-1.wav',
       '/audio/Dan_incorrect/Dan-incorrect-2.wav',
       '/audio/Dan_incorrect/Dan-incorrect-3.wav',
       '/audio/Dan_incorrect/Dan-incorrect-4.wav',
-      '/audio/Dan_incorrect/firstincorrect.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-5.wav'
     ];
     const pool = isCorrect ? correctClips : incorrectClips;
     return pool[Math.floor(Math.random() * pool.length)];
@@ -141,59 +125,42 @@ const Questions: React.FC = () => {
   const handleBack = () => navigate('/map');
 
   return (
-    <div className="question-screen max-h-screen overflow-y-auto p-6 max-w-xl mx-auto text-center">
-      <h1 className="text-xl font-semibold mb-2">
-        Question {id?.replace('q', '') || ''}
-      </h1>
+    <div className="relative question-screen max-h-screen overflow-y-auto p-6 max-w-xl mx-auto text-center">
+      <h1 className="text-xl font-semibold mb-2">Question {id?.replace('q', '') || ''}</h1>
 
       {!question ? (
         <p>Loading question...</p>
       ) : (
         <>
           <div className="mb-4 text-white text-base text-left whitespace-pre-wrap">
-            {question.snippet?.trim() ? (
+            {question.snippet?.trim() && (
               <SyntaxHighlighter
                 language="javascript"
                 style={vscDarkPlus}
                 showLineNumbers
                 customStyle={{
-                  border: '2px solid red',
-                  borderRadius: '0.5rem',
-                  marginBottom: '1rem',
-                  maxHeight: '220px',
-                  overflowY: 'auto',
-                  paddingRight: '1rem',
-                  fontSize: '0.75rem',
+                  border: '2px solid red', borderRadius: '0.5rem',
+                  marginBottom: '1rem', maxHeight: '220px',
+                  overflowY: 'auto', paddingRight: '1rem', fontSize: '0.75rem'
                 }}
               >
                 {question.snippet}
               </SyntaxHighlighter>
-            ) : null}
+            )}
 
             <ReactMarkdown
               components={{
                 code({ inline, className, children, ...props }: { inline?: boolean; className?: string; children?: React.ReactNode }) {
-                  if (inline) {
-                    return (
-                      <code className="bg-gray-700 px-1 rounded text-sm" {...props}>
-                        {children}
-                      </code>
-                    );
-                  }
-                  return (
-                    <div className="mb-4">
-                      <pre className="bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg">
-                        <code {...props}>{children}</code>
-                      </pre>
-                    </div>
+                  return inline ? (
+                    <code className="bg-gray-700 px-1 rounded text-sm" {...props}>{children}</code>
+                  ) : (
+                    <pre className={`bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg ${className ?? ''}`}>
+                      <code {...props}>{children}</code>
+                    </pre>
                   );
                 },
                 p({ node, children, ...props }) {
-                  if (
-                    Array.isArray(children) && children.length === 1 &&
-                    typeof children[0] === 'object' &&
-                    (children[0] as any).type === 'pre'
-                  ) {
+                  if (Array.isArray(children) && children.length === 1 && typeof children[0] === 'object' && (children[0] as any).type === 'pre') {
                     return <>{children}</>;
                   }
                   return <p {...props}>{children}</p>;
@@ -240,9 +207,6 @@ const Questions: React.FC = () => {
         isOpen={showResult}
         onClose={() => setShowResult(false)}
         isCorrect={userWasCorrect}
-        drDanQuote={
-          userWasCorrect ? "You're getting it, junior dev!" : "Nope — that ain't it!"
-        }
         audioUrl={audioUrl}
       />
     </div>

@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Dialog, DialogContent } from '../components/ui/dialog';
-import SoundPlayer from './SoundPlayer';
+import { useEffect, useState } from "react";
+import SoundPlayer from "./SoundPlayer";
+import ReactDOM from "react-dom";
 
 interface AnswerResultModalProps {
   isOpen: boolean;
   onClose: () => void;
   isCorrect: boolean;
-  drDanQuote: string;
   audioUrl?: string;
 }
 
@@ -14,7 +13,6 @@ const AnswerResultModal = ({
   isOpen,
   onClose,
   isCorrect,
-  drDanQuote,
   audioUrl,
 }: AnswerResultModalProps) => {
   const [playAudio, setPlayAudio] = useState(false);
@@ -22,40 +20,36 @@ const AnswerResultModal = ({
   useEffect(() => {
     if (isOpen) {
       setPlayAudio(true);
-    } else {
-      setPlayAudio(false);
     }
   }, [isOpen]);
 
+  if (!isOpen) return null;
+
   const drDanImage = isCorrect
-    ? '/avatars/DrDanCorrect.png'
-    : '/avatars/DrDanWrong.png';
+    ? "/avatars/DrDanCorrect.png"
+    : "/avatars/DrDanWrong.png";
 
-  return (
-    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="fixed bottom-6 right-6 bg-transparent border-none shadow-none z-[9999] w-fit p-0">
-        <div className="flex flex-col items-center gap-2">
-          <img
-            src={drDanImage}
-            alt="Dr. Dan"
-            className="w-[140px] h-auto object-contain"
-          />
-          <p className="text-xs italic text-white text-center">{drDanQuote}</p>
-        </div>
-
-        {audioUrl && (
-          <SoundPlayer
-            src={audioUrl}
-            playing={playAudio}
-            onEnd={() => {
-              setPlayAudio(false);
-              onClose();
-            }}
-          />
-        )}
-      </DialogContent>
-    </Dialog>
+  const modalContent = (
+    <div className="fixed top-1/2 right-4 transform -translate-y-1/2 z-[9999] w-[200px] flex flex-col items-center gap-2 animate-fadeIn pointer-events-none">
+      <img
+        src={drDanImage}
+        alt="Dr. Dan"
+        className="w-[160px] h-auto object-contain"
+      />
+      {audioUrl && (
+        <SoundPlayer
+          src={audioUrl}
+          playing={playAudio}
+          onEnd={() => {
+            setPlayAudio(false);
+            onClose();
+          }}
+        />
+      )}
+    </div>
   );
+
+  return ReactDOM.createPortal(modalContent, document.body);
 };
 
 export default AnswerResultModal;
