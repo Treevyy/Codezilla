@@ -9,10 +9,17 @@ import { typeDefs, resolvers } from './schemas/index';
 import db from './config/connections';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
+import cors from 'cors';
 
 dotenv.config();
 
 const app: Application = express();
+
+app.use(cors({
+  origin: 'http://localhost:3000', // allow your frontend
+  credentials: true,
+}));
+
 const PORT = process.env.PORT || 3001;
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 

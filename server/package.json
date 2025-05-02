@@ -12,7 +12,9 @@
     "watch": "nodemon"
   },
   "nodemonConfig": {
-    "watch": ["src"],
+    "watch": [
+      "src"
+    ],
     "ext": "ts,json,js",
     "exec": "npx tsc && node dist/server.js"
   },
