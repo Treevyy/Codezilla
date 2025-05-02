@@ -6,6 +6,9 @@ const client = new ApolloClient({
       ? `${import.meta.env.VITE_API_URL}/graphql`
       : '/graphql',
     credentials: 'include', // 🔐 Send cookies with each request
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+    }
   }),
   cache: new InMemoryCache(),
 });

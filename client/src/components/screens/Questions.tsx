@@ -5,6 +5,8 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { preloadSounds } from '../../utils/preloadSounds';
+import { UPDATE_STATS } from '@/graphql/mutations';
+import { useMutation } from '@apollo/client';
 
 interface Question {
   snippet?: string;
@@ -14,6 +16,7 @@ interface Question {
 }
 
 const Questions: React.FC = () => {
+  const [updateStats] = useMutation(UPDATE_STATS);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -22,6 +25,8 @@ const Questions: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [userWasCorrect, setUserWasCorrect] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
+
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     preloadSounds([
@@ -117,6 +122,10 @@ const Questions: React.FC = () => {
     if (!question || !selectedAnswer) return;
 
     const isCorrect = selectedAnswer === question.correctAnswer;
+    updateStats({ variables: { isCorrect } })
+    if(isCorrect) {
+      setScore((prevScore) => prevScore + 1);
+    }
     setUserWasCorrect(isCorrect);
     setAudioUrl(getRandomAudio(isCorrect));
     setShowResult(true);
@@ -127,7 +136,7 @@ const Questions: React.FC = () => {
   return (
     <div className="relative question-screen max-h-screen overflow-y-auto p-6 max-w-xl mx-auto text-center">
       <h1 className="text-xl font-semibold mb-2">Question {id?.replace('q', '') || ''}</h1>
-
+      <h2 className="text-lg font-semibold mb-4">Score: {score}</h2>
       {!question ? (
         <p>Loading question...</p>
       ) : (
