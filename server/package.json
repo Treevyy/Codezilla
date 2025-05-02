@@ -9,7 +9,12 @@
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.ts",
-    "watch": "nodemon dist/server.js"
+    "watch": "nodemon"
+  },
+  "nodemonConfig": {
+    "watch": ["src"],
+    "ext": "ts,json,js",
+    "exec": "npx tsc && node dist/server.js"
   },
   "keywords": [],
   "author": "",
