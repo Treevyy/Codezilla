@@ -2,19 +2,19 @@ import { useNavigate } from 'react-router-dom';
 import "../../styles/codezilla.css";
 
 const GameOverPage = ({
-  backgroundUrl = 'client/background/codezilla_bkgd.png',
-  avatarUrl     = 'client/avatars/avatar4.png',
-  codezillaUrl  = 'client/minions/codezilla2.png',
+  backgroundUrl = '/background/codezilla_bkgd.png',
+  avatarUrl     = '/avatars/michael.png',
+  codezillaUrl  = '/minions/codezilla2.png',
 }) => {
   const navigate = useNavigate();
 
   const handlePlayAgain = () => {
-    // navigate to your game-start route
-    navigate('/game');
+    // back to the question map
+    navigate('/map');
   };
 
   const handleMainMenu = () => {
-    // navigate back to your main menu/home route
+    // back to your overall main menu/home
     navigate('/');
   };
 
