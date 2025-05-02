@@ -4,6 +4,7 @@ import AnswerResultModal from '../AnswerResultModal';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { preloadSounds } from '../../utils/preloadSounds'; // ✅ Preload helper
 
 interface Question {
   snippet?: string;
@@ -21,6 +22,21 @@ const Questions: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [userWasCorrect, setUserWasCorrect] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
+
+  // ✅ Preload audio on component mount
+  useEffect(() => {
+    preloadSounds([
+      '/audio/Dan_correct/Dan-correct-1.wav',
+      '/audio/Dan_correct/Dan-correct-2.wav',
+      '/audio/Dan_correct/Dan-correct-3.wav',
+      '/audio/Dan_correct/correctStar.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-1.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-2.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-3.wav',
+      '/audio/Dan_incorrect/Dan-incorrect-4.wav',
+      '/audio/Dan_incorrect/firstincorrect.wav',
+    ]);
+  }, []);
 
   const minionMap: Record<string, string> = {
     q1: 'NullByte',
@@ -156,16 +172,31 @@ const Questions: React.FC = () => {
 
             <ReactMarkdown
               components={{
-                code({ inline, children, ...props }: { inline?: boolean; children?: React.ReactNode }) {
-                  return inline ? (
-                    <code className="bg-gray-700 px-1 rounded text-sm" {...props}>
-                      {children}
-                    </code>
-                  ) : (
-                    <pre className="bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg mb-4">
-                      <code {...props}>{children}</code>
-                    </pre>
+                code({ inline, className, children, ...props }: { inline?: boolean; className?: string; children?: React.ReactNode }) {
+                  if (inline) {
+                    return (
+                      <code className="bg-gray-700 px-1 rounded text-sm" {...props}>
+                        {children}
+                      </code>
+                    );
+                  }
+                  return (
+                    <div className="mb-4">
+                      <pre className="bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg">
+                        <code {...props}>{children}</code>
+                      </pre>
+                    </div>
                   );
+                },
+                p({ node, children, ...props }) {
+                  if (
+                    Array.isArray(children) && children.length === 1 &&
+                    typeof children[0] === 'object' &&
+                    (children[0] as any).type === 'pre'
+                  ) {
+                    return <>{children}</>;
+                  }
+                  return <p {...props}>{children}</p>;
                 },
               }}
             >

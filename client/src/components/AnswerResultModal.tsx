@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../components/ui/dialog';
+import { Dialog, DialogContent } from '../components/ui/dialog';
 import SoundPlayer from './SoundPlayer';
 
 interface AnswerResultModalProps {
@@ -19,7 +19,6 @@ const AnswerResultModal = ({
 }: AnswerResultModalProps) => {
   const [playAudio, setPlayAudio] = useState(false);
 
-  // ✅ Start or stop audio based on modal open state
   useEffect(() => {
     if (isOpen) {
       setPlayAudio(true);
@@ -28,19 +27,22 @@ const AnswerResultModal = ({
     }
   }, [isOpen]);
 
+  const drDanImage = isCorrect
+    ? '/avatars/DrDanCorrect.png'
+    : '/avatars/DrDanWrong.png';
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="rounded-2xl shadow-xl text-center">
-        <DialogHeader>
-          <DialogTitle className={`text-2xl font-bold ${isCorrect ? 'text-green-500' : 'text-red-500'}`}>
-            {isCorrect ? "Correct!" : "Wrong!"}
-          </DialogTitle>
-          <DialogDescription className="text-lg mt-2">
-            {drDanQuote}
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="fixed bottom-6 right-6 bg-transparent border-none shadow-none z-[9999] w-fit p-0">
+        <div className="flex flex-col items-center gap-2">
+          <img
+            src={drDanImage}
+            alt="Dr. Dan"
+            className="w-[140px] h-auto object-contain"
+          />
+          <p className="text-xs italic text-white text-center">{drDanQuote}</p>
+        </div>
 
-        {/* ✅ Use Howler to play full clip, then close modal */}
         {audioUrl && (
           <SoundPlayer
             src={audioUrl}

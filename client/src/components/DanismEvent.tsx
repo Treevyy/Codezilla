@@ -18,11 +18,12 @@ const DanismEvent = () => {
       '/audio/Dan_correct/Dan-correct-2.wav',
       '/audio/Dan_correct/Dan-correct-3.wav',
       '/audio/Dan_correct/Dan-correct-4.wav',
+      '/audio/Dan_correct/Dan-5inarow.wav',
       '/audio/Dan_incorrect/Dan-incorrect-1.wav',
       '/audio/Dan_incorrect/Dan-incorrect-2.wav',
       '/audio/Dan_incorrect/Dan-incorrect-3.wav',
       '/audio/Dan_incorrect/Dan-incorrect-4.wav',
-      '/audio/drdan_fallback.mp3'
+      '/audio/Dan_incorrect/Dan-incorrect-5.wav'
     ]);
   }, []);
 
