@@ -122,6 +122,7 @@ const GameMap: React.FC = () => {
     navigate(`/question/${questionId}`);
   };
 
+  console.log("selectedAvatar:", selectedAvatar);
   return (
     <div className="game-map">
       <BackgroundMusic src="/black.sabbath.mp3" volume={0.03} />

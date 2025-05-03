@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"; 
 import SoundPlayer from "@/components/SoundPlayer"; 
-import { preloadSounds } from "../Utils/preloadSounds"; 
-import { getRandomDanismAndSound } from "../Utils/handleAnswer";
+import { preloadSounds } from "../utils/preloadSounds"; 
+import { getRandomDanismAndSound } from "../utils/handleAnswer";
 
 
 const DanismEvent = () => {

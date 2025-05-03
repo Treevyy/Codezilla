@@ -1,19 +1,19 @@
+// src/pages/VictoryPage.tsx
 import { useNavigate } from 'react-router-dom';
 import "../../styles/codezilla.css";
 
 export default function VictoryPage({
-  // backgroundUrl   = 'client/background/codezilla_bkgd.png',
-  avatarUrl       = 'client/avatars/avatar4.png',
-  confettiUrl     = 'client/background/confetti_image.jpg',
+  avatarUrl     = '/avatars/michael.png',
+  confettiUrl   = '/background/confetti_image.jpg',
 }) {
   const navigate = useNavigate();
 
   const handlePlayAgain = () => {
-    navigate('/game');
+    navigate('/map');      // ← back to your question map
   };
 
   const handleMainMenu = () => {
-    navigate('/');
+    navigate('/');         // ← back to your main menu/home
   };
 
   return (
