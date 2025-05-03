@@ -4,15 +4,18 @@ import AnswerResultModal from '../AnswerResultModal';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { preloadSounds } from '../../Utils/preloadSounds';
-import { UPDATE_STATS } from '@/graphql/mutations';
-import { useMutation } from '@apollo/client';
+
+import { preloadSounds } from '../../utils/preloadSounds';
+
+import BackgroundMusic from '../BackgroundMusic';
+
+
 
 interface Question {
   snippet?: string;
   question: string;
-  choices: { label: string; value: string }[];
-  correctAnswer: string;
+  choices: string[];
+  answer: string; // should be "A", "B", etc.
 }
 
 const Questions: React.FC = () => {
@@ -25,6 +28,7 @@ const Questions: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [userWasCorrect, setUserWasCorrect] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
+  const [isReady, setIsReady] = useState(false);
 
   const [score, setScore] = useState(0);
 
@@ -33,13 +37,18 @@ const Questions: React.FC = () => {
       '/audio/Dan_correct/Dan-correct-1.wav',
       '/audio/Dan_correct/Dan-correct-2.wav',
       '/audio/Dan_correct/Dan-correct-3.wav',
-      '/audio/Dan_correct/correctStar.wav',
+      '/audio/Dan_correct/Dan-correct-4.wav',
       '/audio/Dan_incorrect/Dan-incorrect-1.wav',
       '/audio/Dan_incorrect/Dan-incorrect-2.wav',
       '/audio/Dan_incorrect/Dan-incorrect-3.wav',
       '/audio/Dan_incorrect/Dan-incorrect-4.wav',
-      '/audio/Dan_incorrect/firstincorrect.wav'
+      '/audio/Dan_incorrect/Dan-incorrect-5.wav',
     ]);
+  }, []);
+
+  useEffect(() => {
+    const delay = setTimeout(() => setIsReady(true), 100);
+    return () => clearTimeout(delay);
   }, []);
 
   const minionMap: Record<string, string> = {
@@ -57,46 +66,48 @@ const Questions: React.FC = () => {
       const minion = minionMap[id] || 'NullByte';
       const level = difficultyMap[minion] || 'easy';
       const track = minion === 'PieThon' ? 'Python' : 'JavaScript';
-      const payload = { minion, level, track };
 
       try {
         const res = await fetch('/api/question', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ minion, level, track }),
         });
 
-        const text = await res.text();
-        if (didCancel) return;
+        const data = await res.json();
+        if (didCancel || !data.question) return;
 
-        const data = JSON.parse(text);
-        if (!data?.question) return;
-
-        const raw = data.question;
-        const parsedChoices = raw.choices.map((choice: string, index: number) => ({
-          label: String.fromCharCode(65 + index),
-          value: choice.replace(/^[A-Da-d]\)\s*/, ''),
-        }));
-
-        const correctFromLetter = raw.answer?.length === 1
-          ? raw.choices[raw.answer.charCodeAt(0) - 65]?.replace(/^[A-Da-d]\)\s*/, '')
-          : raw.answer;
-
-        const correctFromIndex = typeof raw.correctIndex === 'number' ? raw.choices[raw.correctIndex] : null;
-
-        setQuestion({
-          snippet: raw.snippet,
-          question: raw.question,
-          choices: parsedChoices,
-          correctAnswer: correctFromLetter || correctFromIndex || '',
-        });
+        if (data.isFallback && data.question.correctIndex !== undefined) {
+          const fallback = data.question;
+          const labeledChoices = fallback.choices.map((choice: string, index: number) => {
+            const label = String.fromCharCode(65 + index); // "A", "B", "C", ...
+            return `${label}) ${choice}`;
+          });
+          const correctLetter = String.fromCharCode(65 + fallback.correctIndex);
+          setQuestion({
+            snippet: '',
+            question: fallback.question,
+            choices: labeledChoices,
+            answer: correctLetter,
+          });
+        } else {
+          const raw = data.question;
+          setQuestion({
+            snippet: raw.snippet,
+            question: raw.question,
+            choices: raw.choices,
+            answer: raw.answer,
+          });
+        }
       } catch (err) {
         console.error('❌ Error:', err);
       }
     };
 
     fetchQuestion();
-    return () => { didCancel = true; };
+    return () => {
+      didCancel = true;
+    };
   }, [id]);
 
   const getRandomAudio = (isCorrect: boolean): string => {
@@ -104,28 +115,28 @@ const Questions: React.FC = () => {
       '/audio/Dan_correct/Dan-correct-1.wav',
       '/audio/Dan_correct/Dan-correct-2.wav',
       '/audio/Dan_correct/Dan-correct-3.wav',
-      '/audio/Dan_correct/Dan-correct-4.wav'
+      '/audio/Dan_correct/Dan-correct-4.wav',
     ];
     const incorrectClips = [
       '/audio/Dan_incorrect/Dan-incorrect-1.wav',
       '/audio/Dan_incorrect/Dan-incorrect-2.wav',
       '/audio/Dan_incorrect/Dan-incorrect-3.wav',
       '/audio/Dan_incorrect/Dan-incorrect-4.wav',
-      '/audio/Dan_incorrect/Dan-incorrect-5.wav'
+      '/audio/Dan_incorrect/Dan-incorrect-5.wav',
     ];
     const pool = isCorrect ? correctClips : incorrectClips;
     return pool[Math.floor(Math.random() * pool.length)];
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault();
     if (!question || !selectedAnswer) return;
 
-    const isCorrect = selectedAnswer === question.correctAnswer;
-    updateStats({ variables: { isCorrect } })
-    if(isCorrect) {
-      setScore((prevScore) => prevScore + 1);
-    }
+    const correctIndex = question.answer.charCodeAt(0) - 65;
+    const correctChoice = question.choices[correctIndex]?.slice(3).trim();
+    const isCorrect = selectedAnswer === correctChoice;
+
+
     setUserWasCorrect(isCorrect);
     setAudioUrl(getRandomAudio(isCorrect));
     setShowResult(true);
@@ -134,90 +145,105 @@ const Questions: React.FC = () => {
   const handleBack = () => navigate('/map');
 
   return (
-    <div className="relative question-screen max-h-screen overflow-y-auto p-6 max-w-xl mx-auto text-center">
-      <h1 className="text-xl font-semibold mb-2">Question {id?.replace('q', '') || ''}</h1>
-      <h2 className="text-lg font-semibold mb-4">Score: {score}</h2>
-      {!question ? (
-        <p>Loading question...</p>
-      ) : (
-        <>
-          <div className="mb-4 text-white text-base text-left whitespace-pre-wrap">
-            {question.snippet?.trim() && (
-              <SyntaxHighlighter
-                language="javascript"
-                style={vscDarkPlus}
-                showLineNumbers
-                customStyle={{
-                  border: '2px solid red', borderRadius: '0.5rem',
-                  marginBottom: '1rem', maxHeight: '220px',
-                  overflowY: 'auto', paddingRight: '1rem', fontSize: '0.75rem'
+
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: 'url("/background/codezilla_bkgd.png")' }}
+    >
+      <BackgroundMusic src="/black.sabbath.mp3" volume={0.03} />
+      <div className="relative question-screen max-h-screen overflow-y-auto p-6 max-w-xl mx-auto text-center pb-40">
+        <h1 className="text-xl font-semibold mb-2 text-white">Question {id?.replace('q', '') || ''}</h1>
+
+        {!question ? (
+          <p className="text-white">Loading question...</p>
+        ) : (
+          <>
+            <div className="mb-4 text-white text-base text-left whitespace-pre-wrap">
+              {question.snippet?.trim() && (
+                <SyntaxHighlighter
+                  language="javascript"
+                  style={vscDarkPlus}
+                  showLineNumbers
+                  customStyle={{
+                    border: '2px solid red',
+                    borderRadius: '0.5rem',
+                    marginBottom: '1rem',
+                    maxHeight: '220px',
+                    overflowY: 'auto',
+                    paddingRight: '1rem',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  {question.snippet}
+                </SyntaxHighlighter>
+              )}
+
+              <ReactMarkdown
+                components={{
+                  code({ inline, className, children, ...props }: { inline?: boolean; className?: string; children?: React.ReactNode }) {
+                    return inline ? (
+                      <code className="bg-gray-700 px-1 rounded text-sm" {...props}>{children}</code>
+                    ) : (
+                      <pre className="bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg">
+                        <code {...props}>{children}</code>
+                      </pre>
+                    );
+                  },
+
                 }}
               >
-                {question.snippet}
-              </SyntaxHighlighter>
-            )}
-
-            <ReactMarkdown
-              components={{
-                code({ inline, className, children, ...props }: { inline?: boolean; className?: string; children?: React.ReactNode }) {
-                  return inline ? (
-                    <code className="bg-gray-700 px-1 rounded text-sm" {...props}>{children}</code>
-                  ) : (
-                    <pre className={`bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg ${className ?? ''}`}>
-                      <code {...props}>{children}</code>
-                    </pre>
-                  );
-                },
-                p({ node, children, ...props }) {
-                  if (Array.isArray(children) && children.length === 1 && typeof children[0] === 'object' && (children[0] as any).type === 'pre') {
-                    return <>{children}</>;
-                  }
-                  return <p {...props}>{children}</p>;
-                },
-              }}
-            >
-              {question.question}
-            </ReactMarkdown>
-          </div>
-
-          <form onSubmit={handleSubmit} className="text-left flex flex-col items-start gap-2">
-            {question.choices.map((choice, index) => (
-              <label key={index} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="answer"
-                  value={choice.value}
-                  checked={selectedAnswer === choice.value}
-                  onChange={(e) => setSelectedAnswer(e.target.value)}
-                />
-                <span>{choice.label}: {choice.value}</span>
-              </label>
-            ))}
-            <div className="w-full flex justify-center">
-              <button
-                type="submit"
-                disabled={!selectedAnswer}
-                className={`mt-4 px-4 py-2 rounded text-white ${
-                  selectedAnswer ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'
-                }`}
-              >
-                Submit Answer
-              </button>
+                {question.question}
+              </ReactMarkdown>
             </div>
-          </form>
-        </>
-      )}
 
-      <button onClick={handleBack} className="mt-6 text-blue-500 underline">
-        Back to Map
-      </button>
+            <div className="text-left flex flex-col items-start gap-2 text-white">
+              {question.choices.map((choice, index) => {
+                const value = choice.slice(3).trim(); // remove "A) " etc.
+                return (
+                  <label key={index} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="answer"
+                      value={value}
+                      checked={selectedAnswer === value}
+                      onChange={(e) => setSelectedAnswer(e.target.value)}
+                    />
+                    <span>{choice}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </>
+        )}
 
-      <AnswerResultModal
-        isOpen={showResult}
-        onClose={() => setShowResult(false)}
-        isCorrect={userWasCorrect}
-        audioUrl={audioUrl}
-      />
+        <div className="mt-10 w-full flex justify-between items-center gap-4">
+          <button
+            onClick={handleSubmit}
+            disabled={!selectedAnswer || !isReady}
+            className={`px-4 py-2 border-2 rounded font-semibold transition duration-200 ${
+              selectedAnswer && isReady
+                ? 'text-white border-white hover:text-black hover:bg-yellow-400'
+                : 'text-white border-white opacity-50 cursor-not-allowed bg-transparent'
+            }`}
+          >
+            Submit Answer
+          </button>
+
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 border-2 rounded font-semibold text-white border-white bg-transparent hover:text-black hover:bg-red-600 transition duration-200"
+          >
+            Back to Map
+          </button>
+        </div>
+
+        <AnswerResultModal
+          isOpen={showResult}
+          onClose={() => setShowResult(false)}
+          isCorrect={userWasCorrect}
+          audioUrl={audioUrl}
+        />
+      </div>
     </div>
   );
 };

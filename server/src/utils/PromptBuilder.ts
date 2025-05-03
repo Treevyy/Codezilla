@@ -173,23 +173,24 @@ Correct Answer: <A/B/C/D>
     return `
 You've reached Codezilla — the final full-stack menace.
 
-Generate a **boss-level** full-stack JavaScript multiple-choice question.
+Generate a concise **boss-level** full-stack JavaScript multiple-choice question.
 
 Requirements:
-- Include a **realistic** full-stack code snippet (5–15 lines) that touches **2+ technologies** (React, Node.js, MongoDB, Express).
-- Then ask a deep question testing understanding across these layers.
-- Provide 4 complete answer choices and 1 correct letter.
+- Use a **realistic**, concise code snippet (max 8 lines) involving **2+ technologies** (e.g., React + Express, Node + MongoDB).
+- Keep the question under **3 lines**.
+- Focus on practical issues: async handling, props/state, or DB operations.
+- Provide 4 short answer choices (A–D) and specify the correct answer.
 
 Format:
 \`\`\`js
-<React+Node or Express+Mongo or async combo>
+<short full-stack code snippet>
 \`\`\`
 
-Question: <full-stack integration question>
-A) <complete>
-B) <complete>
-C) <complete>
-D) <complete>
+Question: <concise full-stack logic question>
+A) ...
+B) ...
+C) ...
+D) ...
 Correct Answer: <A/B/C/D>
 `;
   }
@@ -226,50 +227,72 @@ Correct Answer: <A/B/C/D>
   }
 }
 
+function shuffleChoices(choices: string[], correctIndex: number) {
+  const mapped = choices.map((text, index) => ({ text, isCorrect: index === correctIndex }));
+  for (let i = mapped.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [mapped[i], mapped[j]] = [mapped[j], mapped[i]];
+  }
+  return {
+    shuffledChoices: mapped.map((item) => item.text),
+    newCorrectIndex: mapped.findIndex((item) => item.isCorrect),
+  };
+}
 
 export function parseOpenAIResponse(raw: string) {
   const lines = raw.split("\n").map(line => line.trim()).filter(line => line !== "");
 
   const questionLines: string[] = [];
-  const choices: string[] = [];
-  let answer = "";
+  let rawChoices: { label: string; text: string }[] = [];
+  let answerLetter = "";
   let codeBlock: string | undefined = undefined;
   let recordingQuestion = false;
 
-  // ✅ Smart snippet check
   const codeRegex = /```(?:js|python)?\n([\s\S]*?)```/i;
   const codeMatch = raw.match(codeRegex);
-
   if (codeMatch && codeMatch[1].trim().length > 0) {
     codeBlock = codeMatch[1].trim();
-  } else {
-    console.info("ℹ️ No code block found — likely a non-snippet question.");
   }
 
-  // ✅ Extract question & answers
   for (const line of lines) {
     if (line.toLowerCase().startsWith("question:")) {
       questionLines.push(line.replace(/^question:\s*/i, "").trim());
       recordingQuestion = true;
-    } else if (/^[a-dA-D]\)/.test(line)) {
-      choices.push(line);
+    } else if (/^[a-d]\)/i.test(line)) {
+      const label = line[0].toUpperCase();
+      const text = line.slice(2).trim();
+      rawChoices.push({ label, text });
       recordingQuestion = false;
     } else if (line.toLowerCase().startsWith("correct answer")) {
       const match = line.match(/[A-D]/i);
       if (match) {
-        answer = match[0].toUpperCase();
+        answerLetter = match[0].toUpperCase();
       }
     } else if (recordingQuestion) {
       questionLines.push(line);
     }
   }
 
-  const question = questionLines.join("\n");
+  // Get the correct answer's text
+  const correct = rawChoices.find(c => c.label === answerLetter);
+  if (!correct) throw new Error("Correct answer not found");
+
+  const correctText = correct.text;
+
+  // Shuffle answer texts
+  const shuffled = rawChoices.map(c => c.text).sort(() => Math.random() - 0.5);
+
+  // Rebuild labeled choices
+  const labeledChoices = shuffled.map((text, index) => `${"ABCD"[index]}) ${text}`);
+
+  // Find new index of correct answer
+  const newCorrectIndex = shuffled.findIndex(t => t === correctText);
+  const newCorrectLetter = "ABCD"[newCorrectIndex];
 
   return {
     snippet: codeBlock,
-    question,
-    choices,
-    answer,
+    question: questionLines.join("\n"),
+    choices: labeledChoices,
+    answer: newCorrectLetter, // ✅ example: "B"
   };
 }

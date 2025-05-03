@@ -31,10 +31,17 @@ const questionHandler: RequestHandler = async (req, res) => {
     });
 
     const rawContent = chatCompletion.choices[0].message?.content || '';
-    const structuredQuestion = parseOpenAIResponse(rawContent);
+    let structuredQuestion;
+
+    try {
+      structuredQuestion = parseOpenAIResponse(rawContent);
+    } catch (err) {
+      console.error("❌ Failed to parse OpenAI response:", err);
+      const fallback = PromptBuilder.getFallbackQuestion(minion);
+      return res.json({ type: 'fallback', question: fallback, fallback: true });
+    }
 
     console.log("✅ Structured Question:", structuredQuestion);
-    console.log("🧠 Parsed question object:", structuredQuestion);
 
     if (!structuredQuestion.snippet) {
       console.warn("⚠️ Missing code snippet. AI response may not follow expected format.");
