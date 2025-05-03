@@ -76,6 +76,7 @@ const startApolloServer = async () => {
     console.warn('⚠️  Static files not found. Ensure the client has been built.');
   }
 
+const PORT = process.env.PORT || 10000;
   app.listen(PORT, () => {
     console.log(`✅ Server is running on http://localhost:${PORT}`);
     console.log(`✅ GraphQL endpoint available at http://localhost:${PORT}/graphql`);
