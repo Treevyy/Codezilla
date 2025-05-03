@@ -23,16 +23,6 @@ const avatarList = [
   "/avatars/shawna.png",
 ];
 
-// Utility hook to set a class on the body element
-const useBodyClass = (className: string) => {
-  React.useEffect(() => {
-    document.body.classList.add(className);
-    return () => {
-      document.body.classList.remove(className);
-    };
-  }, [className]);
-};
-
 const SignUp: React.FC = () => {
   useBodyClass('signup-background');
   const navigate = useNavigate();
@@ -128,44 +118,12 @@ const SignUp: React.FC = () => {
             ))}
           </div>
         </div>
-
-        <button className="signup-button" type="submit">Enter the Game</button>
-        <p>Select Your Avatar</p>
-        <div className="avatar-grid">
-          <div className="avatar-row">
-            {avatarList.slice(0, 3).map((avatar, index) => (
-              <img
-                key={index}
-                src={avatar}
-                alt={`Avatar ${index}`}
-                className={`avatar-option ${
-                  selectedAvatar === avatar ? "selected" : ""
-                }`}
-                onClick={() => setSelectedAvatar(avatar)}
-              />
-            ))}
-          </div>
-          <div className="avatar-row">
-            {avatarList.slice(3).map((avatar, index) => (
-              <img
-                key={index + 3}
-                src={avatar}
-                alt={`Avatar ${index + 3}`}
-                className={`avatar-option ${
-                  selectedAvatar === avatar ? "selected" : ""
-                }`}
-                onClick={() => setSelectedAvatar(avatar)}
-              />
-            ))}
-          </div>
-        </div>
-
-        <button className="signup-button" type="submit">
-          Enter the Game
-        </button>
+        <button type="submit" className="login-button">Sign Up</button>
       </form>
     </div>
   );
 };
+
+
 
 export default SignUp;

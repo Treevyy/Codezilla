@@ -4,12 +4,8 @@ import AnswerResultModal from '../AnswerResultModal';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
 import { preloadSounds } from '../../utils/preloadSounds';
-
 import BackgroundMusic from '../BackgroundMusic';
-
-
 
 interface Question {
   snippet?: string;
@@ -19,7 +15,6 @@ interface Question {
 }
 
 const Questions: React.FC = () => {
-  const [updateStats] = useMutation(UPDATE_STATS);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -29,8 +24,6 @@ const Questions: React.FC = () => {
   const [userWasCorrect, setUserWasCorrect] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
   const [isReady, setIsReady] = useState(false);
-
-  const [score, setScore] = useState(0);
 
   useEffect(() => {
     preloadSounds([
@@ -80,7 +73,7 @@ const Questions: React.FC = () => {
         if (data.isFallback && data.question.correctIndex !== undefined) {
           const fallback = data.question;
           const labeledChoices = fallback.choices.map((choice: string, index: number) => {
-            const label = String.fromCharCode(65 + index); // "A", "B", "C", ...
+            const label = String.fromCharCode(65 + index);
             return `${label}) ${choice}`;
           });
           const correctLetter = String.fromCharCode(65 + fallback.correctIndex);
@@ -136,16 +129,26 @@ const Questions: React.FC = () => {
     const correctChoice = question.choices[correctIndex]?.slice(3).trim();
     const isCorrect = selectedAnswer === correctChoice;
 
-
     setUserWasCorrect(isCorrect);
     setAudioUrl(getRandomAudio(isCorrect));
     setShowResult(true);
+
+    const questionNumber = Number(id?.replace('q', ''));
+
+    setTimeout(() => {
+      if (questionNumber === 5) {
+        if (isCorrect) {
+          navigate('/victory');
+        } else {
+          navigate('/gameover');
+        }
+      }
+    }, 6000);
   };
 
   const handleBack = () => navigate('/map');
 
   return (
-
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: 'url("/background/codezilla_bkgd.png")' }}
@@ -189,7 +192,6 @@ const Questions: React.FC = () => {
                       </pre>
                     );
                   },
-
                 }}
               >
                 {question.question}
@@ -198,7 +200,7 @@ const Questions: React.FC = () => {
 
             <div className="text-left flex flex-col items-start gap-2 text-white">
               {question.choices.map((choice, index) => {
-                const value = choice.slice(3).trim(); // remove "A) " etc.
+                const value = choice.slice(3).trim();
                 return (
                   <label key={index} className="flex items-center gap-2 cursor-pointer">
                     <input
