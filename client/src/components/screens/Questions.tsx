@@ -5,7 +5,9 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { preloadSounds } from '../../utils/preloadSounds';
+
 import BackgroundMusic from '../BackgroundMusic';
+
 
 interface Question {
   snippet?: string;
@@ -15,6 +17,7 @@ interface Question {
 }
 
 const Questions: React.FC = () => {
+  const [updateStats] = useMutation(UPDATE_STATS);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -24,6 +27,8 @@ const Questions: React.FC = () => {
   const [userWasCorrect, setUserWasCorrect] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
   const [isReady, setIsReady] = useState(false);
+
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     preloadSounds([
@@ -129,6 +134,7 @@ const Questions: React.FC = () => {
     const correctChoice = question.choices[correctIndex]?.slice(3).trim();
     const isCorrect = selectedAnswer === correctChoice;
 
+
     setUserWasCorrect(isCorrect);
     setAudioUrl(getRandomAudio(isCorrect));
     setShowResult(true);
@@ -137,6 +143,7 @@ const Questions: React.FC = () => {
   const handleBack = () => navigate('/map');
 
   return (
+
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: 'url("/background/codezilla_bkgd.png")' }}
@@ -180,6 +187,7 @@ const Questions: React.FC = () => {
                       </pre>
                     );
                   },
+
                 }}
               >
                 {question.question}
