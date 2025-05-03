@@ -8,7 +8,7 @@ import openaiRoutes from './routes/api/openai';
 import { typeDefs, resolvers } from './schemas/index';
 import db from './config/connections';
 import jwt from 'jsonwebtoken';
-// import fs from 'fs';
+import fs from 'fs';
 import cors from 'cors';
 
 dotenv.config();
@@ -20,12 +20,12 @@ app.use(cors({
   credentials: true,
 }));
 
-const PORT = process.env.PORT || 3001;
-// const PORT = Number(process.env.PORT) || 3001;
-// app.listen(PORT, '0.0.0.0', () => {
-//   console.log(`✅ Server running on 0.0.0.0:${PORT}`);
-//   console.log(`✅ GraphQL at 0.0.0.0:${PORT}/graphql`);
-// });
+// const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env.PORT) || 3001;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server running on 0.0.0.0:${PORT}`);
+  console.log(`✅ GraphQL at 0.0.0.0:${PORT}/graphql`);
+});
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 // ✅ Apollo Server setup
@@ -70,30 +70,22 @@ const startApolloServer = async () => {
     res.send('🎙️ Codezilla server is up!');
   });
 
-  if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../../client/dist')));
-  
-    app.get('*', (_req: Request, res: Response) => {
-      res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
-    });
-  }
-  
-  // const clientDistPath = path.join(__dirname, '../../client/dist');
-  // if (fs.existsSync(clientDistPath)) {
-  //   app.use(express.static(clientDistPath));
+  const clientDistPath = path.join(__dirname, '../../client/dist');
+  if (fs.existsSync(clientDistPath)) {
+    app.use(express.static(clientDistPath));
 
-  //   app.get('*', (_req: Request, res: Response) => {
-  //     res.sendFile(path.join(clientDistPath, 'index.html'));
-  //   });
-  // } else {
-  //   console.warn('⚠️  Static files not found. Ensure the client has been built.');
-  // }
+    app.get('*', (_req: Request, res: Response) => {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+    });
+  } else {
+    console.warn('⚠️  Static files not found. Ensure the client has been built.');
+  }
 
 // const PORT = process.env.PORT || 10000;
-  app.listen(PORT, () => {
-    console.log(`✅ Server is running on http://localhost:${PORT}`);
-    console.log(`✅ GraphQL endpoint available at http://localhost:${PORT}/graphql`);
-  });
+//   app.listen(PORT, () => {
+//     console.log(`✅ Server is running on http://localhost:${PORT}`);
+//     console.log(`✅ GraphQL endpoint available at http://localhost:${PORT}/graphql`);
+//   });
 };
 
 startApolloServer();
