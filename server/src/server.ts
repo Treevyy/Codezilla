@@ -20,7 +20,12 @@ app.use(cors({
   credentials: true,
 }));
 
-const PORT = process.env.PORT || 3001;
+// const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env.PORT) || 3001;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server running on 0.0.0.0:${PORT}`);
+  console.log(`✅ GraphQL at 0.0.0.0:${PORT}/graphql`);
+});
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 // ✅ Apollo Server setup
@@ -68,6 +73,7 @@ const startApolloServer = async () => {
   const clientDistPath = path.join(__dirname, '../../client/dist');
   if (fs.existsSync(clientDistPath)) {
     app.use(express.static(clientDistPath));
+
     app.get('*', (_req: Request, res: Response) => {
       res.sendFile(path.join(clientDistPath, 'index.html'));
     });
@@ -75,10 +81,11 @@ const startApolloServer = async () => {
     console.warn('⚠️  Static files not found. Ensure the client has been built.');
   }
 
-  app.listen(PORT, () => {
-    console.log(`✅ Server is running on http://localhost:${PORT}`);
-    console.log(`✅ GraphQL endpoint available at http://localhost:${PORT}/graphql`);
-  });
+// const PORT = process.env.PORT || 10000;
+//   app.listen(PORT, () => {
+//     console.log(`✅ Server is running on http://localhost:${PORT}`);
+//     console.log(`✅ GraphQL endpoint available at http://localhost:${PORT}/graphql`);
+//   });
 };
 
 startApolloServer();
