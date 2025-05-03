@@ -21,6 +21,7 @@ const questionHandler: RequestHandler = async (req, res) => {
     res.status(400).json({ error: 'minion, level, and track are required in the request body.' });
     return;
   }
+
   const prompt = PromptBuilder.getPrompt(track, level);
 
   try {
@@ -30,29 +31,35 @@ const questionHandler: RequestHandler = async (req, res) => {
     });
 
     const rawContent = chatCompletion.choices[0].message?.content || '';
-    const structuredQuestion = parseOpenAIResponse(rawContent);
+    let structuredQuestion;
+
+    try {
+      structuredQuestion = parseOpenAIResponse(rawContent);
+    } catch (err) {
+      console.error("❌ Failed to parse OpenAI response:", err);
+      const fallback = PromptBuilder.getFallbackQuestion(minion);
+      return res.json({ type: 'fallback', question: fallback, fallback: true });
+    }
 
     console.log("✅ Structured Question:", structuredQuestion);
 
-    console.log("🧠 Parsed question object:", structuredQuestion);
-if (!structuredQuestion.snippet) {
-  console.warn("⚠️ Missing code snippet. AI response may not follow expected format.");
-}
-
+    if (!structuredQuestion.snippet) {
+      console.warn("⚠️ Missing code snippet. AI response may not follow expected format.");
+    }
 
     // 🔒 Enforce code snippets for all minions except NullByte
     const requiresSnippet = !['NullByte'].includes(minion);
     const hasCodeBlock = rawContent.includes('```js') || rawContent.includes('```python');
 
     if (requiresSnippet && !hasCodeBlock) {
-      console.warn(`⚠️ Response from OpenAI missing code snippet for ${minion}. Using fallback.`);
+      console.warn(`[${new Date().toISOString()}] ⚠️ Fallback Activated - Missing Snippet | Minion: ${minion}, Level: ${level}, Track: ${track}`);
       const fallback = PromptBuilder.getFallbackQuestion(minion);
-      return res.json({ type: 'fallback', question: fallback });
+      return res.json({ type: 'fallback', question: fallback, fallback: true });
     }
 
-    res.json({ type: 'ai', question: structuredQuestion });
+    res.json({ type: 'ai', question: structuredQuestion, fallback: false });
   } catch (error) {
-    console.error('OpenAI API error:', error);
+    console.error(`[${new Date().toISOString()}] ❌ OpenAI API error:`, error);
 
     const fallback = PromptBuilder.getFallbackQuestion(minion);
     if (!fallback) {
@@ -60,7 +67,8 @@ if (!structuredQuestion.snippet) {
       return;
     }
 
-    res.json({ type: 'fallback', question: fallback });
+    console.warn(`[${new Date().toISOString()}] ⚠️ Fallback Activated - OpenAI Error | Minion: ${minion}, Level: ${level}, Track: ${track}`);
+    res.json({ type: 'fallback', question: fallback, fallback: true });
   }
 };
 
@@ -95,7 +103,7 @@ const ttsHandler: RequestHandler = async (req, res) => {
     const audioUrl = `/audio/${fileName}`;
     res.json({ audioUrl });
   } catch (error) {
-    console.error('TTS Generation Error:', error);
+    console.error(`[${new Date().toISOString()}] ❌ TTS Generation Error:`, error);
     res.status(500).json({ error: "Failed to generate Dr. Dan's voice line." });
   }
 };

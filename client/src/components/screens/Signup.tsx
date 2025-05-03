@@ -1,6 +1,16 @@
-/*CREATE IMPORTS */
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// src/components/screens/Signup.tsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// Utility hook to set a CSS class on the body element
+const useBodyClass = (className: string) => {
+  React.useEffect(() => {
+    document.body.classList.add(className);
+    return () => {
+      document.body.classList.remove(className);
+    };
+  }, [className]);
+};
 import "../../styles/codezilla.css";
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../../graphql/mutations";
@@ -14,6 +24,7 @@ const avatarList = [
 ];
 
 const SignUp: React.FC = () => {
+  useBodyClass('signup-background');
   const navigate = useNavigate();
   const [selectedAvatar, setSelectedAvatar] = useState("");
   const [username, setUsername] = useState("");
@@ -25,10 +36,15 @@ const SignUp: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+
     if (!username.trim() || !selectedAvatar) {
       alert("Please enter a username and select an avatar before proceeding.");
       return;
     }
+
+    localStorage.setItem('selectedAvatar', selectedAvatar);
+    localStorage.setItem('username', username);
+
 
     // localStorage.setItem('selectedAvatar', selectedAvatar);
     // localStorage.setItem('username', username);
@@ -85,9 +101,7 @@ const SignUp: React.FC = () => {
                 key={index}
                 src={avatar}
                 alt={`Avatar ${index}`}
-                className={`avatar-option ${
-                  selectedAvatar === avatar ? "selected" : ""
-                }`}
+                className={`avatar-option ${selectedAvatar === avatar ? 'selected' : ''}`}
                 onClick={() => setSelectedAvatar(avatar)}
               />
             ))}
@@ -98,21 +112,18 @@ const SignUp: React.FC = () => {
                 key={index + 3}
                 src={avatar}
                 alt={`Avatar ${index + 3}`}
-                className={`avatar-option ${
-                  selectedAvatar === avatar ? "selected" : ""
-                }`}
+                className={`avatar-option ${selectedAvatar === avatar ? 'selected' : ''}`}
                 onClick={() => setSelectedAvatar(avatar)}
               />
             ))}
           </div>
         </div>
-
-        <button className="signup-button" type="submit">
-          Enter the Game
-        </button>
+        <button type="submit" className="login-button">Sign Up</button>
       </form>
     </div>
   );
 };
+
+
 
 export default SignUp;

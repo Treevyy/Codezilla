@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import "../../styles/codezilla.css";
 
 export default function VictoryPage({
-  backgroundUrl = '/background/codezilla_bkgd.png',
   avatarUrl     = '/avatars/michael.png',
   confettiUrl   = '/background/confetti_image.jpg',
 }) {
