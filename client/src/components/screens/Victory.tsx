@@ -20,7 +20,7 @@ export default function VictoryPage({
   return (
     <div
       className="victory-page"
-      style={{ backgroundImage: `url(${backgroundUrl})` }}
+      // style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
       <div className="victory-container">
         {/* Confetti overlay */}
