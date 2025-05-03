@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Minion from './Minions';
-import { useBodyClass } from '../../Utils/useBodyClass';
+import { useBodyClass } from '../../utils/useBodyClass';
 import { preloadSounds } from '../../utils/preloadSounds';
+import BackgroundMusic from '../BackgroundMusic';
 import "../../styles/codezilla.css";
 import drDanImg from '../../../avatars/drdan2.png';
 import flameImg from '../../assets/flame.png';
@@ -31,6 +32,12 @@ const GameMap: React.FC = () => {
       '/audio/5inarow.wav'
     ]);
   }, []);
+
+  const handleDanHover = () => {
+    const audio = new Audio('/audio/DecafDan.wav');
+    audio.volume = 0.3;
+    audio.play().catch(err => console.warn('Autoplay blocked:', err));
+  };
 
   const minions = [
     {
@@ -115,6 +122,8 @@ const GameMap: React.FC = () => {
 
   return (
     <div className="game-map">
+      <BackgroundMusic src="/black.sabbath.mp3" volume={0.03} />
+
       <svg className="map-lines">
         {nodes.map((node, index) => {
           const nextNode = nodes[index + 1];
@@ -154,7 +163,12 @@ const GameMap: React.FC = () => {
 
       <div className="dr-dan-wrapper">
         <div className="glow-circle"></div>
-        <img src={drDanImg} alt="Dr. Dan" className="dr-dan-image" />
+        <img
+          src={drDanImg}
+          alt="Dr. Dan"
+          className="dr-dan-image hover:cursor-pointer"
+          onMouseEnter={handleDanHover}
+        />
       </div>
 
       {selectedAvatar && (

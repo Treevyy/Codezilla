@@ -1,27 +1,31 @@
-// import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-// const BackgroundMusic = () => {
-//   useEffect(() => {
-//     const audio = new Audio('/80s-loop-5.wav'); // or '/background-music.mp3'
-//     audio.loop = true;
-//     audio.volume = 0.5;
+interface Props {
+  src: string;
+  volume?: number;
+}
 
-//     // Try autoplay inside a user interaction-friendly trigger
-//     const playAudio = () => {
-//       audio.play().catch((err) => {
-//         console.warn('Autoplay blocked by browser:', err);
-//       });
-//     };
+const BackgroundMusic: React.FC<Props> = ({ src, volume = 0.03 }) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-//     // Listen for first click
-//     document.body.addEventListener('click', playAudio, { once: true });
+  useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(src);
+      audioRef.current.loop = true;
+      audioRef.current.volume = volume;
+    }
 
-//     return () => {
-//       audio.pause();
-//     };
-//   }, []);
+    const audio = audioRef.current;
+    audio.play().catch((err) => {
+      console.warn('⚠️ Autoplay blocked:', err);
+    });
 
-//   return null;
-// };
+    return () => {
+      // Do not pause or destroy the audio here to preserve continuity
+    };
+  }, [src, volume]);
 
-// export default BackgroundMusic;
+  return null;
+};
+
+export default BackgroundMusic;
