@@ -2,18 +2,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Utility hook to set a CSS class on the body element
-const useBodyClass = (className: string) => {
-  React.useEffect(() => {
-    document.body.classList.add(className);
-    return () => {
-      document.body.classList.remove(className);
-    };
-  }, [className]);
-};
+// Utility hook to set a CSS class on the body element (imported from utils)
 import "../../styles/codezilla.css";
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../../graphql/mutations";
+import { useBodyClass } from '../../utils/useBodyClass';
 
 const avatarList = [
   "/avatars/carmen.png",
