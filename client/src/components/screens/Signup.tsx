@@ -112,6 +112,7 @@ const SignUp: React.FC = () => {
           </div>
         </div>
         <button type="submit" className="login-button">Sign Up</button>
+        <button type="submit" className="login-button">Sign Up</button>
       </form>
     </div>
   );

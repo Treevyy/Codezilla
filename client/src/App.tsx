@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -6,6 +6,7 @@ import {
   useNavigate,
   useLocation,
 } from 'react-router-dom';
+
 import IntroPage from './components/screens/IntroPage';
 import { Login } from './components/screens/Login';
 import GameMap from './components/screens/GameMap';
@@ -13,9 +14,12 @@ import GameOver from './components/screens/GameOver';
 import Victory from './components/screens/Victory';
 import Signup from './components/screens/Signup';
 import Questions from './components/screens/Questions';
-import './styles/codezilla.css';
+
+
 import LeaderBoard from './components/LeaderBoard';
 
+import './styles/codezilla.css';
+import BackgroundMusicProvider from './components/BackgroundMusicProvider';
 
 
 const LogoutButton: React.FC = () => {
@@ -35,6 +39,7 @@ const LogoutButton: React.FC = () => {
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+
   const isGameActive =
     location.pathname.startsWith('/map') ||
     location.pathname.startsWith('/question');
@@ -42,7 +47,10 @@ const AppContent: React.FC = () => {
   return (
     <div className="app-wrapper">
       {/* Only load persistent music during gameplay */}
-      {/* {isGameActive && <PersistentBackgroundMusic />} */}
+
+      {isGameActive && (
+        <BackgroundMusicProvider src="/black.sabbath.mp3" volume={0.03} />
+      )}
 
       <img
         src="/codezilla_logo.png"
@@ -64,6 +72,7 @@ const AppContent: React.FC = () => {
           <Route path="/question/:id" element={<Questions />} />
         </Routes>
       </div>
+
   );
 };
 
@@ -76,4 +85,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-

@@ -56,7 +56,7 @@ export default LeaderBoard;
 // import { useQuery } from '@apollo/client';
 // import { GET_USERS } from '../graphql/queries'; // Adjust the import path as necessary
 
-// function LeaderBoard() {
+function LeaderBoard() {
 
 //     interface IUser {
 //         _id: string;
@@ -69,7 +69,6 @@ export default LeaderBoard;
 //    /* const [leaderboardData, setLeaderboardData] = useState([
 //         { _id: 'kjhd63r9bhsef', username: 'Player1', correctAnswers: 100 },
 //         { username: 'Player2', score: 90 },
-//         { username: 'Player3', score: 80 },
 //         { username: 'Player4', score: 70 },
 //         { username: 'Player5', score: 60 },
 //     ]);
@@ -106,6 +105,6 @@ export default LeaderBoard;
 //     </div>
 
 //   )
-// }
+}
 
-// export default LeaderBoard
+ export default LeaderBoard
