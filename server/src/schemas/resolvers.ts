@@ -13,14 +13,12 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 interface AddUserArgs {
   input: {
     username: string;
-    // email: string;
     selectedAvatar: string;
     password: string;
   };
 }
 
 interface LoginUserArgs {
-  // email: string;
   username: string;
   password: string;
 }
@@ -33,6 +31,7 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
+
     generateQuestion: async (_parent: any, args: { track: string; level: string; minion: string }) => {
       const { track, level, minion } = args;
       const prompt = PromptBuilder.getPrompt(track, level);
@@ -51,13 +50,13 @@ const resolvers = {
 
         return { question, choices, answer };
       } catch (error) {
-        console.error('OpenAI failed, falling back to hardcoded question:', error);
+        console.error('❌ OpenAI failed — using fallback:', error);
         const fallback = PromptBuilder.getFallbackQuestion(minion);
 
         return {
           question: fallback.question,
-          choices: fallback.choices,
-          answer: fallback.choices[fallback.correctIndex],
+          choices: fallback.choices,   // already formatted like "A) choice"
+          answer: fallback.answer      // already formatted like "B"
         };
       }
     },
@@ -66,15 +65,10 @@ const resolvers = {
   Mutation: {
     addUser: async (_parent: any, { input }: AddUserArgs) => {
       const user = await User.create(input);
-      const token = signToken(
-        user.username, 
-        // user.email, 
-        user._id
-      );
+      const token = signToken(user.username, user._id);
       return { token, user };
     },
-    // login: async (_parent: any, { email, password }: LoginUserArgs) => {
-    //   const user = await User.findOne({ email });
+
     login: async (_parent: any, { username, password }: LoginUserArgs) => {
       const user = await User.findOne({ username });
 
@@ -83,40 +77,35 @@ const resolvers = {
       }
 
       const isPasswordCorrect = await user.isCorrectPassword(password);
-
       if (!isPasswordCorrect) {
         throw new AuthenticationError('Invalid credentials');
       }
 
-      const token = signToken(
-        user.username, 
-        // user.email, 
-        user._id
-      );
-      
+      const token = signToken(user.username, user._id);
       return { token, user };
     },
+
     createCharacter: async (_: any, { name, picture, voice }: { name: string, picture: string, voice: string }) => {
       const newCharacter = new Character({ name, picture, voice });
       return await newCharacter.save();
     },
+
     deleteCharacter: async (_: any, { id }: { id: string }) => {
       return await Character.findByIdAndDelete(id);
     },
+
     updateStats: async (_parent: any, { isCorrect }: { isCorrect: boolean }, context: any) => {
-  if (!context.user) {
-    throw new AuthenticationError('You need to be logged in!');
-  }
+      if (!context.user) {
+        throw new AuthenticationError('You need to be logged in!');
+      }
 
-  const update = isCorrect
-    ? { $inc: { correctAnswers: 1 } }
-    : { $inc: { wrongAnswers: 1 } };
+      const update = isCorrect
+        ? { $inc: { correctAnswers: 1 } }
+        : { $inc: { wrongAnswers: 1 } };
 
-  const user = await User.findByIdAndUpdate(context.user._id, update, { new: true });
-
-  return user;
-},
-
+      const user = await User.findByIdAndUpdate(context.user._id, update, { new: true });
+      return user;
+    },
   },
 };
 
