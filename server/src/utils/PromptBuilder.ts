@@ -220,13 +220,23 @@ Correct Answer: <A/B/C/D>
 `;
   }
 
-  static getFallbackQuestion(minionName: string): FallbackQuestion {
+  // ✅ NEW METHOD: Shuffled and formatted fallback question
+  static getFallbackQuestion(minionName: string) {
     const pool = fallbackQuestion[minionName] || [];
-    const idx = Math.floor(Math.random() * pool.length);
-    return pool[idx];
+    const selected = pool[Math.floor(Math.random() * pool.length)];
+    const { shuffledChoices, newCorrectIndex } = shuffleChoices(selected.choices, selected.correctIndex);
+
+    return {
+      question: selected.question,
+      choices: shuffledChoices.map((text, idx) => `${"ABCD"[idx]}) ${text}`),
+      answer: "ABCD"[newCorrectIndex],
+      snippet: undefined,
+      isFallback: true,
+    };
   }
 }
 
+// Helper for shuffling choices and tracking new correct index
 function shuffleChoices(choices: string[], correctIndex: number) {
   const mapped = choices.map((text, index) => ({ text, isCorrect: index === correctIndex }));
   for (let i = mapped.length - 1; i > 0; i--) {
@@ -239,6 +249,7 @@ function shuffleChoices(choices: string[], correctIndex: number) {
   };
 }
 
+// Exported function for parsing OpenAI responses
 export function parseOpenAIResponse(raw: string) {
   const lines = raw.split("\n").map(line => line.trim()).filter(line => line !== "");
 
@@ -273,19 +284,13 @@ export function parseOpenAIResponse(raw: string) {
     }
   }
 
-  // Get the correct answer's text
   const correct = rawChoices.find(c => c.label === answerLetter);
   if (!correct) throw new Error("Correct answer not found");
 
   const correctText = correct.text;
 
-  // Shuffle answer texts
   const shuffled = rawChoices.map(c => c.text).sort(() => Math.random() - 0.5);
-
-  // Rebuild labeled choices
   const labeledChoices = shuffled.map((text, index) => `${"ABCD"[index]}) ${text}`);
-
-  // Find new index of correct answer
   const newCorrectIndex = shuffled.findIndex(t => t === correctText);
   const newCorrectLetter = "ABCD"[newCorrectIndex];
 
@@ -293,6 +298,6 @@ export function parseOpenAIResponse(raw: string) {
     snippet: codeBlock,
     question: questionLines.join("\n"),
     choices: labeledChoices,
-    answer: newCorrectLetter, // ✅ example: "B"
+    answer: newCorrectLetter,
   };
 }

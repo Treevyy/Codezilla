@@ -5,14 +5,49 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { preloadSounds } from '../../utils/preloadSounds';
-import BackgroundMusic from '../BackgroundMusic';
+import BackgroundMusic from '../BackgroundMusicProvider';
 
 interface Question {
   snippet?: string;
   question: string;
   choices: string[];
-  answer: string; // should be "A", "B", etc.
+  answer: string;
+  isFallback?: boolean;
 }
+
+const CollapsibleSnippet: React.FC<{ code: string }> = ({ code }) => {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="mb-4">
+      <button
+        className="mb-2 text-sm text-yellow-300 underline hover:text-yellow-500 transition"
+        onClick={() => setShow(!show)}
+      >
+        {show ? 'Hide Code' : 'Show Code'}
+      </button>
+      {show && (
+        <div className="overflow-hidden transition-all duration-300 ease-in-out">
+          <SyntaxHighlighter
+            language="javascript"
+            style={vscDarkPlus}
+            showLineNumbers
+            customStyle={{
+              border: '2px solid red',
+              borderRadius: '0.5rem',
+              marginBottom: '1rem',
+              maxHeight: '300px',
+              overflowY: 'auto',
+              paddingRight: '1rem',
+              fontSize: '0.75rem',
+            }}
+          >
+            {code}
+          </SyntaxHighlighter>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Questions: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -45,10 +80,19 @@ const Questions: React.FC = () => {
   }, []);
 
   const minionMap: Record<string, string> = {
-    q1: 'NullByte', q2: 'Dbug', q3: 'Typerrorasaurus', q4: 'PieThon', q5: 'Codezilla',
+    q1: 'NullByte',
+    q2: 'Dbug',
+    q3: 'Typerrorasaurus',
+    q4: 'PieThon',
+    q5: 'Codezilla',
   };
+
   const difficultyMap: Record<string, string> = {
-    NullByte: 'easy', Dbug: 'medium', Typerrorasaurus: 'medium-hard', PieThon: 'hard', Codezilla: 'boss',
+    NullByte: 'easy',
+    Dbug: 'medium',
+    Typerrorasaurus: 'medium-hard',
+    PieThon: 'hard',
+    Codezilla: 'boss',
   };
 
   useEffect(() => {
@@ -70,28 +114,14 @@ const Questions: React.FC = () => {
         const data = await res.json();
         if (didCancel || !data.question) return;
 
-        if (data.isFallback && data.question.correctIndex !== undefined) {
-          const fallback = data.question;
-          const labeledChoices = fallback.choices.map((choice: string, index: number) => {
-            const label = String.fromCharCode(65 + index);
-            return `${label}) ${choice}`;
-          });
-          const correctLetter = String.fromCharCode(65 + fallback.correctIndex);
-          setQuestion({
-            snippet: '',
-            question: fallback.question,
-            choices: labeledChoices,
-            answer: correctLetter,
-          });
-        } else {
-          const raw = data.question;
-          setQuestion({
-            snippet: raw.snippet,
-            question: raw.question,
-            choices: raw.choices,
-            answer: raw.answer,
-          });
-        }
+        const raw = data.question;
+        setQuestion({
+          snippet: raw.snippet,
+          question: raw.question,
+          choices: raw.choices,
+          answer: raw.answer,
+          isFallback: data.fallback || false,
+        });
       } catch (err) {
         console.error('❌ Error:', err);
       }
@@ -102,6 +132,12 @@ const Questions: React.FC = () => {
       didCancel = true;
     };
   }, [id]);
+
+  useEffect(() => {
+    if (question?.isFallback) {
+      console.warn('⚠️ Fallback question triggered (not shown to user)');
+    }
+  }, [question]);
 
   const getRandomAudio = (isCorrect: boolean): string => {
     const correctClips = [
@@ -137,11 +173,7 @@ const Questions: React.FC = () => {
 
     setTimeout(() => {
       if (questionNumber === 5) {
-        if (isCorrect) {
-          navigate('/victory');
-        } else {
-          navigate('/gameover');
-        }
+        navigate(isCorrect ? '/victory' : '/gameover');
       }
     }, 6000);
   };
@@ -150,19 +182,24 @@ const Questions: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center bg-no-repeat"
+      className="min-h-screen bg-cover bg-center bg-no-repeat relative"
       style={{ backgroundImage: 'url("/background/codezilla_bkgd.png")' }}
     >
       <BackgroundMusic src="/black.sabbath.mp3" volume={0.03} />
-      <div className="relative question-screen max-h-screen overflow-y-auto p-6 max-w-xl mx-auto text-center pb-40">
-        <h1 className="text-xl font-semibold mb-2 text-white">Question {id?.replace('q', '') || ''}</h1>
+
+      <div className="relative question-screen max-h-screen overflow-y-auto p-6 max-w-xl mx-auto text-left pb-40">
+        <h1 className="text-xl font-semibold mb-4 text-white">
+          Question {id?.replace('q', '') || ''}
+        </h1>
 
         {!question ? (
           <p className="text-white">Loading question...</p>
         ) : (
           <>
-            <div className="mb-4 text-white text-base text-left whitespace-pre-wrap">
-              {question.snippet?.trim() && (
+            {question.snippet?.trim() &&
+              (id === 'q5' ? (
+                <CollapsibleSnippet code={question.snippet} />
+              ) : (
                 <SyntaxHighlighter
                   language="javascript"
                   style={vscDarkPlus}
@@ -179,17 +216,20 @@ const Questions: React.FC = () => {
                 >
                   {question.snippet}
                 </SyntaxHighlighter>
-              )}
+              ))}
 
+            <div className="mb-4 text-white text-base text-left whitespace-pre-wrap">
               <ReactMarkdown
                 components={{
-                  code({ inline, className, children, ...props }: { inline?: boolean; className?: string; children?: React.ReactNode }) {
+                  code({ inline, children, ...props }: any) {
                     return inline ? (
-                      <code className="bg-gray-700 px-1 rounded text-sm" {...props}>{children}</code>
+                      <code className="inline-code" {...props}>
+                        {children}
+                      </code>
                     ) : (
-                      <pre className="bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg">
+                      <div className="bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg overflow-x-auto">
                         <code {...props}>{children}</code>
-                      </pre>
+                      </div>
                     );
                   },
                 }}

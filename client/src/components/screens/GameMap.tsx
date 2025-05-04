@@ -4,7 +4,7 @@ import Minion from './Minions';
 
 import { useBodyClass } from '../../utils/useBodyClass';
 import { preloadSounds } from '../../utils/preloadSounds';
-import BackgroundMusic from '../BackgroundMusic';
+import BackgroundMusic from '../BackgroundMusicProvider';
 
 import "../../styles/codezilla.css";
 import drDanImg from '../../../avatars/drdan2.png';
@@ -25,13 +25,13 @@ const GameMap: React.FC = () => {
       '/audio/Dan_correct/Dan-correct-1.wav',
       '/audio/Dan_correct/Dan-correct-2.wav',
       '/audio/Dan_correct/Dan-correct-3.wav',
-      '/audio/Dan_correct/correctStar.wav',
+      '/audio/Dan_correct/Dan-correct-4.wav',
       '/audio/Dan_incorrect/Dan-incorrect-1.wav',
       '/audio/Dan_incorrect/Dan-incorrect-2.wav',
       '/audio/Dan_incorrect/Dan-incorrect-3.wav',
       '/audio/Dan_incorrect/Dan-incorrect-4.wav',
-      '/audio/Dan_incorrect/firstincorrect.wav',
-      '/audio/5inarow.wav'
+      '/audio/Dan_incorrect/Dan-incorrect-5.wav',
+      //'/audio/5inarow.wav'
     ]);
   }, []);
 

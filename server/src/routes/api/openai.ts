@@ -61,14 +61,13 @@ const questionHandler: RequestHandler = async (req, res) => {
   } catch (error) {
     console.error(`[${new Date().toISOString()}] ❌ OpenAI API error:`, error);
 
-    const fallback = PromptBuilder.getFallbackQuestion(minion);
-    if (!fallback) {
+    try {
+      const fallback = PromptBuilder.getFallbackQuestion(minion);
+      console.warn(`[${new Date().toISOString()}] ⚠️ Fallback Activated - OpenAI Error | Minion: ${minion}, Level: ${level}, Track: ${track}`);
+      res.json({ type: 'fallback', question: fallback, fallback: true });
+    } catch (fallbackError) {
       res.status(500).json({ error: 'No fallback questions available for this minion.' });
-      return;
     }
-
-    console.warn(`[${new Date().toISOString()}] ⚠️ Fallback Activated - OpenAI Error | Minion: ${minion}, Level: ${level}, Track: ${track}`);
-    res.json({ type: 'fallback', question: fallback, fallback: true });
   }
 };
 
