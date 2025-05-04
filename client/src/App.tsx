@@ -14,10 +14,13 @@ import GameOver from './components/screens/GameOver';
 import Victory from './components/screens/Victory';
 import Signup from './components/screens/Signup';
 import Questions from './components/screens/Questions';
+
+
 import LeaderBoard from './components/LeaderBoard';
 
 import './styles/codezilla.css';
 import BackgroundMusicProvider from './components/BackgroundMusicProvider';
+
 
 const LogoutButton: React.FC = () => {
   const navigate = useNavigate();
@@ -44,6 +47,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="app-wrapper">
       {/* Only load persistent music during gameplay */}
+
       {isGameActive && (
         <BackgroundMusicProvider src="/black.sabbath.mp3" volume={0.03} />
       )}
@@ -56,18 +60,19 @@ const AppContent: React.FC = () => {
 
       <LogoutButton />
 
-      <Routes>
-        <Route path="/" element={<IntroPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/map" element={<GameMap />} />
-        <Route path="/gameover" element={<GameOver />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/victory" element={<Victory />} />
-       /* <Route path="/leaderboard" element={<LeaderBoard />} /> */
-      
-        <Route path="/question/:id" element={<Questions />} />
-      </Routes>
-    </div>
+        {/* Routes */}
+        <Routes>
+          <Route path="/" element={<IntroPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/map" element={<GameMap />} />
+          <Route path="/gameover" element={<GameOver />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/victory" element={<Victory />} />
+          <Route path="/leaderboard" element={<LeaderBoard />} />
+          <Route path="/question/:id" element={<Questions />} />
+        </Routes>
+      </div>
+
   );
 };
 

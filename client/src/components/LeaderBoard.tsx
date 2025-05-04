@@ -1,3 +1,57 @@
+import "../styles/leaderboard.css";
+import { useQuery } from "@apollo/client";
+import { GET_USERS } from "@/graphql/queries";
+import { useNavigate } from "react-router-dom";
+
+function LeaderBoard() {
+  const navigate = useNavigate();
+
+  const { loading, data } = useQuery(GET_USERS);
+
+  const allUsers = data?.getAllUsers || [];
+
+  if (loading) return <p>Loading...</p>;
+
+  console.log(allUsers);
+
+  return (
+    <div className="leaderboard-page">
+      <div className="leaderboard-container">
+        <h2 className="leaderboard-subtitle">Leaderboard</h2>
+        <div className="leaderboard-actions">
+          {allUsers.map((user: any, index: number) => {
+            if (index < 5) {
+              return (
+                <div className="player-info">
+                  <img src={user.selectedAvatar} />
+                  <p>{user.username}</p>
+                  <img src="/src/assets/dans_gold_star.png" />
+                  <p>{user.correctAnswers}</p>
+                </div>
+              );
+            } else {
+              return null;
+            }
+          })}
+        </div>
+
+        <br />
+      <button
+        className="btn main-menu-btn"
+        onClick={() => {
+          navigate("/map");
+        }}
+      >
+        Main Menu
+      </button>
+      </div>
+
+    </div>
+  );
+}
+
+export default LeaderBoard;
+
 // import React, { useState } from 'react';
 // import { useQuery } from '@apollo/client';
 // import { GET_USERS } from '../graphql/queries'; // Adjust the import path as necessary
@@ -22,7 +76,7 @@ function LeaderBoard() {
 //     // Fetch leaderboard data from the server (mocked for now)
 //     const [leaderboardData, setLeaderboardData] = useState([]);
 
-//     // How do we get the data from the server? 
+//     // How do we get the data from the server?
 
 //     const { loading, data, error } = useQuery<IUser[] | undefined>(GET_USERS);
 
@@ -32,23 +86,22 @@ function LeaderBoard() {
 //     //     variables: { difficulty_lvl: 'easy' }, // Example variable
 //     // );
 //     const users = data?.users || [];
-    
+
 //     // Sort the leaderboard data by score in descending order - by what measurement (?)
 //     const sortedLeaderboard = users.sort((a: number, b: number) => b.correctAnswers - a.correctAnswers);
 
-    
 //   return (
 //     <div>
-//       { sortedLeaderboard.length > 0 ? sortedLeaderboard.map(user: IUser => ( 
+//       { sortedLeaderboard.length > 0 ? sortedLeaderboard.map(user: IUser => (
 //         <div className="leaderboard-container">
 //             <div className="leaderboard-item" key={user._id}>
 //                 <img src={user.avatar} alt="Avatar" className="avatar" /> {/* Assuming you have an avatar property */}
 //                 <span className="username">{user.username}</span>
 //                 <span className="score">{user.correctAnswers}</span>
-//             </div> 
+//             </div>
 //         ))
-//         </div> 
-//         } 
+//         </div>
+//         }
 //     </div>
 
 //   )

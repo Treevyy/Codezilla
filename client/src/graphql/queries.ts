@@ -22,3 +22,14 @@ export const ME = gql`
     }
   }
 `;
+
+
+export const GET_USERS = gql`
+query GetAllUsers {
+  getAllUsers {
+    correctAnswers
+    username
+    selectedAvatar
+  }
+}
+`

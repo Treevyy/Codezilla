@@ -32,6 +32,13 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
 
+    getAllUsers: async () => {
+      const users = await User.find();
+      return users;
+    },
+
+
+
     generateQuestion: async (_parent: any, args: { track: string; level: string; minion: string }) => {
       const { track, level, minion } = args;
       const prompt = PromptBuilder.getPrompt(track, level);
