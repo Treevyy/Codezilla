@@ -2,10 +2,9 @@ import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
   type User {
-    _id: ID
-    username: String
-    email: String
-    password: String
+    _id: ID!
+    username: String!
+    selectedAvatar: String!
     correctAnswers: Int
     wrongAnswers: Int
   }
@@ -18,7 +17,7 @@ const typeDefs = gql`
 
   type Auth {
     token: ID!
-    user: User
+    user: User!
   }
 
   type Question {
@@ -26,8 +25,9 @@ const typeDefs = gql`
     choices: [String!]!
     answer: String!
   }
+
   type Character {
-    _id: ID
+    _id: ID!
     name: String!
     picture: String!
     voice: String!
@@ -37,25 +37,17 @@ const typeDefs = gql`
     users: [User]
     user(username: String!): User
     me: User
-    generateQuestion(track: String!, level: String!, minion: String!): Question
+    generateQuestion(track: String!, level: String!, minion: String!): Question!
     characters: [Character]!
-
   }
 
   type Mutation {
-    addUser(input: UserInput!): Auth
-    login(username: String!, password: String!): Auth
-    createCharacter(name: String!, picture: String!, voice: String!): Character
+    addUser(input: UserInput!): Auth!
+    login(username: String!, password: String!): Auth!
+    createCharacter(name: String!, picture: String!, voice: String!): Character!
     deleteCharacter(id: ID!): Character
     updateStats(isCorrect: Boolean!): User
   }
 `;
 
 export default typeDefs;
-
-
-// input UserInput {
-//   username: String!
-//   email: String!
-//   password: String!
-// }
