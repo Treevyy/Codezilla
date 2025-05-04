@@ -4,7 +4,7 @@ const typeDefs = gql`
   type User {
     _id: ID
     username: String
-    email: String
+    selectedAvatar: String
     password: String
     correctAnswers: Int
     wrongAnswers: Int
@@ -39,7 +39,7 @@ const typeDefs = gql`
     me: User
     generateQuestion(track: String!, level: String!, minion: String!): Question
     characters: [Character]!
-
+    getAllUsers: [User]
   }
 
   type Mutation {

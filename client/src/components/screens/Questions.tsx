@@ -6,6 +6,8 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { preloadSounds } from '../../utils/preloadSounds';
 import BackgroundMusic from '../BackgroundMusic';
+import { UPDATE_STATS } from '@/graphql/mutations';
+import { useMutation } from '@apollo/client';
 
 interface Question {
   snippet?: string;
@@ -17,6 +19,8 @@ interface Question {
 const Questions: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  const [updateQuestionStats] = useMutation(UPDATE_STATS)
 
   const [question, setQuestion] = useState<Question | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -121,7 +125,7 @@ const Questions: React.FC = () => {
     return pool[Math.floor(Math.random() * pool.length)];
   };
 
-  const handleSubmit = (e?: React.FormEvent | React.MouseEvent) => {
+  const handleSubmit = async (e?: React.FormEvent | React.MouseEvent) => {
     if (e) e.preventDefault();
     if (!question || !selectedAnswer) return;
 
@@ -135,6 +139,16 @@ const Questions: React.FC = () => {
 
     const questionNumber = Number(id?.replace('q', ''));
 
+    try {
+      await updateQuestionStats({
+        variables: {
+          isCorrect
+        },
+      });
+    }
+    catch (error) {
+      console.error('Error updating question stats:', error);
+    }
     setTimeout(() => {
       if (questionNumber === 5) {
         if (isCorrect) {

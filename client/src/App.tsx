@@ -14,34 +14,9 @@ import Victory from './components/screens/Victory';
 import Signup from './components/screens/Signup';
 import Questions from './components/screens/Questions';
 import './styles/codezilla.css';
+import LeaderBoard from './components/LeaderBoard';
 
-// 🔊 Persistent background music that plays on interaction
-const PersistentBackgroundMusic: React.FC = () => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  useEffect(() => {
-    if (!audioRef.current) {
-      const audio = new Audio('/black.sabbath.mp3');
-      audio.loop = true;
-      audio.volume = 0.03;
-      audioRef.current = audio;
-
-      const play = () => {
-        audio.play().catch((err) =>
-          console.warn('Autoplay blocked or error playing:', err)
-        );
-      };
-
-      document.addEventListener('click', play, { once: true });
-    }
-
-    return () => {
-      audioRef.current?.pause();
-    };
-  }, []);
-
-  return null;
-};
 
 const LogoutButton: React.FC = () => {
   const navigate = useNavigate();
@@ -67,7 +42,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="app-wrapper">
       {/* Only load persistent music during gameplay */}
-      {isGameActive && <PersistentBackgroundMusic />}
+      {/* {isGameActive && <PersistentBackgroundMusic />} */}
 
       <img
         src="/codezilla_logo.png"
@@ -77,16 +52,18 @@ const AppContent: React.FC = () => {
 
       <LogoutButton />
 
-      <Routes>
-        <Route path="/" element={<IntroPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/map" element={<GameMap />} />
-        <Route path="/gameover" element={<GameOver />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/victory" element={<Victory />} />
-        <Route path="/question/:id" element={<Questions />} />
-      </Routes>
-    </div>
+        {/* Routes */}
+        <Routes>
+          <Route path="/" element={<IntroPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/map" element={<GameMap />} />
+          <Route path="/gameover" element={<GameOver />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/victory" element={<Victory />} />
+          <Route path="/leaderboard" element={<LeaderBoard />} />
+          <Route path="/question/:id" element={<Questions />} />
+        </Routes>
+      </div>
   );
 };
 

@@ -37,7 +37,7 @@ const getContext = async ({ req }: { req: Request }) => {
   if (!token) return { user: null };
 
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET as string);
+    const user = jwt.verify(token, process.env.JWT_SECRET_KEY as string);
     return { user };
   } catch (err) {
     console.warn('❌ Invalid JWT');
