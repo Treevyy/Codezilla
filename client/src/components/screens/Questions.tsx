@@ -6,7 +6,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { preloadSounds } from '../../utils/preloadSounds';
 
-import BackgroundMusic from '../BackgroundMusic';
+import BackgroundMusic from '../BackgroundMusicProvider';
 import { UPDATE_STATS } from '@/graphql/mutations';
 import { useMutation } from '@apollo/client';
 
