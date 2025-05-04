@@ -22,17 +22,7 @@ const GameMap: React.FC = () => {
 
   useEffect(() => {
     preloadSounds([
-      '/audio/Dan_correct/Dan-correct-1.wav',
-      '/audio/Dan_correct/Dan-correct-2.wav',
-      '/audio/Dan_correct/Dan-correct-3.wav',
-      '/audio/Dan_correct/Dan-correct-4.wav',
-      '/audio/Dan_incorrect/Dan-incorrect-1.wav',
-      '/audio/Dan_incorrect/Dan-incorrect-2.wav',
-      '/audio/Dan_incorrect/Dan-incorrect-3.wav',
-      '/audio/Dan_incorrect/Dan-incorrect-4.wav',
-      '/audio/Dan_incorrect/Dan-incorrect-5.wav',
-      //'/audio/5inarow.wav'
-    ]);
+      '/audio/Dan_correct/Dan-correct-1.wav']);
   }, []);
 
   const handleDanHover = () => {

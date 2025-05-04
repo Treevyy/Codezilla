@@ -6,7 +6,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { preloadSounds } from '../../utils/preloadSounds';
 
-import BackgroundMusic from '../BackgroundMusic';
+import BackgroundMusic from '../BackgroundMusicProvider';
 import { UPDATE_STATS } from '@/graphql/mutations';
 import { useMutation } from '@apollo/client';
 
@@ -236,23 +236,27 @@ const Questions: React.FC = () => {
               ))}
 
             <div className="mb-4 text-white text-base text-left whitespace-pre-wrap">
-              <ReactMarkdown
-                components={{
-                  code({ inline, children, ...props }: any) {
-                    return inline ? (
-                      <code className="inline-code" {...props}>
-                        {children}
-                      </code>
-                    ) : (
-                      <div className="bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg overflow-x-auto">
-                        <code {...props}>{children}</code>
-                      </div>
-                    );
-                  },
-                }}
-              >
-                {question.question}
-              </ReactMarkdown>
+  <ReactMarkdown
+  components={{
+    p({ node, children, ...props }) {
+      return <div className="mb-2" {...props}>{children}</div>;
+    },
+    code({ inline, children, ...props }: { inline?: boolean; children?: React.ReactNode }) {
+      return inline ? (
+        <code className="inline-code" {...props}>
+          {children}
+        </code>
+      ) : (
+        <pre className="bg-gray-800 p-4 rounded-md text-sm font-mono shadow-lg overflow-x-auto">
+          <code {...props}>{children}</code>
+        </pre>
+      );
+    },
+  }}
+>
+  {question.question}
+</ReactMarkdown>
+
             </div>
 
             <div className="text-left flex flex-col items-start gap-2 text-white">
