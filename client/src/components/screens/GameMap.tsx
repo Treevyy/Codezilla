@@ -10,6 +10,8 @@ import "../../styles/codezilla.css";
 import drDanImg from '../../../avatars/drdan2.png';
 import flameImg from '../../assets/flame.png';
 
+
+
 const selectedAvatar = localStorage.getItem('selectedAvatar');
 const username = localStorage.getItem('username') || 'Player';
 
@@ -21,8 +23,7 @@ const GameMap: React.FC = () => {
   const [selectedMinionId, setSelectedMinionId] = useState<string | null>(null);
 
   useEffect(() => {
-    preloadSounds([
-      '/audio/Dan_correct/Dan-correct-1.wav']);
+    preloadSounds(['/audio/Dan_correct/Dan-correct-1.wav']);
   }, []);
 
   const handleDanHover = () => {
@@ -112,7 +113,6 @@ const GameMap: React.FC = () => {
     navigate(`/question/${questionId}`);
   };
 
-  console.log("selectedAvatar:", selectedAvatar);
   return (
     <div className="game-map">
       <BackgroundMusic src="/black.sabbath.mp3" volume={0.03} />

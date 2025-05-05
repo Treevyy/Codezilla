@@ -1,5 +1,4 @@
 import "../styles/leaderboard.css";
-import "../styles/codezilla.css"
 import { useBodyClass } from '../utils/useBodyClass';
 import { useQuery } from "@apollo/client";
 import { GET_USERS } from "@/graphql/queries";
