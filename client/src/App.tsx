@@ -20,7 +20,7 @@ import LeaderBoard from './components/LeaderBoard';
 
 import './styles/codezilla.css';
 import BackgroundMusicProvider from './components/BackgroundMusicProvider';
-
+import SoundToggle from './components/SoundToggle';
 
 const LogoutButton: React.FC = () => {
   const navigate = useNavigate();
@@ -43,11 +43,12 @@ const AppContent: React.FC = () => {
   const isGameActive =
     location.pathname.startsWith('/map') ||
     location.pathname.startsWith('/question');
+  
+
 
   return (
     <div className="app-wrapper">
       {/* Only load persistent music during gameplay */}
-
       {isGameActive && (
         <BackgroundMusicProvider src="/black.sabbath.mp3" volume={0.03} />
       )}
@@ -60,21 +61,24 @@ const AppContent: React.FC = () => {
 
       <LogoutButton />
 
-        {/* Routes */}
-        <Routes>
-          <Route path="/" element={<IntroPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/map" element={<GameMap />} />
-          <Route path="/gameover" element={<GameOver />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/victory" element={<Victory />} />
-          <Route path="/leaderboard" element={<LeaderBoard />} />
-          <Route path="/question/:id" element={<Questions />} />
-        </Routes>
-      </div>
+      {/* ✅ GLOBAL SoundToggle button */}
+      <SoundToggle />
 
+      {/* Routes */}
+      <Routes>
+        <Route path="/" element={<IntroPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/map" element={<GameMap />} />
+        <Route path="/gameover" element={<GameOver />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/victory" element={<Victory />} />
+        <Route path="/leaderboard" element={<LeaderBoard />} />
+        <Route path="/question/:id" element={<Questions />} />
+      </Routes>
+    </div>
   );
 };
+
 
 const App: React.FC = () => {
   return (
@@ -85,4 +89,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-// commmits
