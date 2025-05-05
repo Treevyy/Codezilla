@@ -53,6 +53,17 @@ const startApolloServer = async () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
+  const clientDistPath = path.join(__dirname, '../../client/dist');
+  if (fs.existsSync(clientDistPath)) {
+    app.use(express.static(clientDistPath));
+    app.get('*', (_req: Request, res: Response) => {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+    });
+    
+  } else {
+    console.warn('⚠️  Static files not found. Ensure the client has been built.');
+  }
+  
   // ✅ API routes
   app.use('/api', openaiRoutes);
 
@@ -64,15 +75,6 @@ const startApolloServer = async () => {
     res.send('🎙️ Codezilla server is up!');
   });
 
-  const clientDistPath = path.join(__dirname, '../../client/dist');
-  if (fs.existsSync(clientDistPath)) {
-    app.use(express.static(clientDistPath));
-    app.get('*', (_req: Request, res: Response) => {
-      res.sendFile(path.join(clientDistPath, 'index.html'));
-    });
-  } else {
-    console.warn('⚠️  Static files not found. Ensure the client has been built.');
-  }
 
   app.listen(PORT, () => {
     console.log(`✅ Server is running on http://localhost:${PORT}`);
