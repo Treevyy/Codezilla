@@ -3,7 +3,7 @@ import "../../styles/codezilla.css";
 
 
 const GameOverPage = ({
-  avatarUrl     = '/avatars/michael.png',
+  avatarUrl     = '/avatars/drdan2.png',
   codezillaUrl  = '/minions/codezilla2.png',
 }) => {
   const navigate = useNavigate();
