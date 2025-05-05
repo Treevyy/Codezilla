@@ -1,7 +1,10 @@
 import "../styles/leaderboard.css";
+import "../styles/codezilla.css"
+import { useBodyClass } from '../utils/useBodyClass';
 import { useQuery } from "@apollo/client";
 import { GET_USERS } from "@/graphql/queries";
 import { useNavigate } from "react-router-dom";
+
 
 function LeaderBoard() {
   const navigate = useNavigate();
@@ -10,7 +13,11 @@ function LeaderBoard() {
 
   const allUsers = data?.getAllUsers || [];
 
+  useBodyClass('background-image');
+
   if (loading) return <p>Loading...</p>;
+
+  const sortedUsers = [...allUsers].sort((a, b) => b.correctAnswers - a.correctAnswers);
 
   console.log(allUsers);
 
@@ -19,7 +26,7 @@ function LeaderBoard() {
       <div className="leaderboard-container">
         <h2 className="leaderboard-subtitle">Leaderboard</h2>
         <div className="leaderboard-actions">
-          {allUsers.map((user: any, index: number) => {
+          {sortedUsers.map((user: any, index: number) => {
             if (index < 5) {
               return (
                 <div className="player-info">
