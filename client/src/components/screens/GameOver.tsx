@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import "../../styles/codezilla.css";
 
 const GameOverPage = ({
-  avatarUrl = '/avatars/drdan2.png',
-  codezillaUrl = '/minions/codezilla2.png',
+  avatarUrl = '../../../public/assets/avatars/drdan2.png',
+  codezillaUrl = '../../../public/assets/minions/codezilla2.png',
 }) => {
   const navigate = useNavigate();
 
@@ -64,6 +64,12 @@ const GameOverPage = ({
           </button>
           <button className="btn main-menu-btn" onClick={handleMainMenu}>
             Main Menu
+          </button>
+          <button
+            className="btn main-menu-btn"
+            onClick={() => navigate('/leaderboard')}
+          >
+            Leaderboards
           </button>
         </div>
       </div>
