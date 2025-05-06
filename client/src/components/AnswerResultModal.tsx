@@ -26,8 +26,8 @@ const AnswerResultModal = ({
   if (!isOpen) return null;
 
   const drDanImage = isCorrect
-    ? "/avatars/DrDanCorrect.png"
-    : "/avatars/DrDanWrong.png";
+    ? "/dan/DrDanCorrect.png"
+    : "/dan/DrDanWrong.png";
 
   const modalContent = (
     <div className="fixed top-1/2 right-4 transform -translate-y-1/2 z-[9999] w-[200px] flex flex-col items-center gap-2 animate-fadeIn pointer-events-none">
