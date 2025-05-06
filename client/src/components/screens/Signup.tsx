@@ -9,7 +9,7 @@ import { ADD_USER } from "../../graphql/mutations";
 import { useBodyClass } from '../../utils/useBodyClass';
 
 const avatarList = [
-  "../../../public/assets/avatars/carmen.png",
+  "../../../public/assets/avatars/drdan2.png",
   "../../../public/assets/avatars/jacquilyn.png",
   "../../../public/assets/avatars/trevor.png",
   "../../../public/assets/avatars/michael.png",

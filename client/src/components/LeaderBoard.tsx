@@ -31,7 +31,7 @@ function LeaderBoard() {
                 <div className="player-info">
                   <img src={user.selectedAvatar} />
                   <p>{user.username}</p>
-                  <img src="/src/assets/dans_gold_star.png" />
+                  <img src="/public/assets/dans_gold_star.png" />
                   <p>{user.correctAnswers}</p>
                 </div>
               );
