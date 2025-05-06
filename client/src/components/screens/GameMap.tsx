@@ -7,7 +7,7 @@ import { preloadSounds } from '../../utils/preloadSounds';
 import BackgroundMusic from '../BackgroundMusicProvider';
 
 import "../../styles/codezilla.css";
-import drDanImg from '../../../avatars/drdan2.png';
+import drDanImg from '../../assets/avatars/drdan2.png';
 import flameImg from '../../assets/flame.png';
 
 
@@ -37,7 +37,7 @@ const GameMap: React.FC = () => {
       id: '1',
       xPercent: 17,
       yPercent: 25,
-      image: '/minions/nullbyte3a.png',
+      image: '../../assets/minions/nullbyte3a.png',
       name: 'Nullbyte',
       questionId: 'q1',
       taunt: "Don't blank out now... this should be easy.",
@@ -48,7 +48,7 @@ const GameMap: React.FC = () => {
       id: '2',
       xPercent: 35,
       yPercent: 48,
-      image: '/minions/dbug2a.png',
+      image: '../../assets/minions/dbug2a.png',
       name: 'Dbug',
       questionId: 'q2',
       taunt: "Let's squash some bugs... or get squashed.",
@@ -59,7 +59,7 @@ const GameMap: React.FC = () => {
       id: '3',
       xPercent: 53,
       yPercent: 65,
-      image: '/minions/typerrorus.png',
+      image: '../../assets/minions/typerrorus.png',
       name: 'Typerrorasaurus',
       questionId: 'q3',
       taunt: "Let’s see how you handle *this* error.",
