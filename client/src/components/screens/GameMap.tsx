@@ -70,6 +70,7 @@ const GameMap: React.FC = () => {
       id: '4',
       xPercent: 70,
       yPercent: 45,
+
       image: '../../../public/assets/minions/pie-thon.png',
       name: 'Pie-Thon',
       questionId: 'q4',
