@@ -9,11 +9,11 @@ import { ADD_USER } from "../../graphql/mutations";
 import { useBodyClass } from '../../utils/useBodyClass';
 
 const avatarList = [
-  "/avatars/carmen.png",
-  "/avatars/jacquilyn.png",
-  "/avatars/trevor.png",
-  "/avatars/michael.png",
-  "/avatars/shawna.png",
+  "../../../public/assets/avatars/carmen.png",
+  "../../../public/assets/avatars/jacquilyn.png",
+  "../../../public/assets/avatars/trevor.png",
+  "../../../public/assets/avatars/michael.png",
+  "../../../public/assets/avatars/shawna.png",
 ];
 
 const SignUp: React.FC = () => {

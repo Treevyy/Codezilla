@@ -8,7 +8,7 @@
     "develop": "concurrently \"cd server && npm run watch\" \"sleep 3 && cd client && npm run dev\"",
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "concurrently \"cd server && npm run build\" \"cd client && npm run build\"",
-    "render-build": "cd client && npm install && npm run build && cd ../server && npm install && npm run build",
+    "render-build": "cd server && npm install && npm run build && cd ../client && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
     "lint": "eslint ."
@@ -32,7 +32,8 @@
     "dotenv": "^16.5.0",
     "express": "^4.17.1",
     "openai": "^4.95.1",
-    "react": "^19.1.0"
+    "react": "^19.1.0",
+    "concurrently": "^9.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
