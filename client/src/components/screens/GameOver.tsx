@@ -65,6 +65,12 @@ const GameOverPage = ({
           <button className="btn main-menu-btn" onClick={handleMainMenu}>
             Main Menu
           </button>
+          <button
+            className="btn main-menu-btn"
+            onClick={() => navigate('/leaderboard')}
+          >
+            Leaderboards
+          </button>
         </div>
       </div>
     </div>
