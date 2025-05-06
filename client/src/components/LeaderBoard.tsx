@@ -1,8 +1,11 @@
 import "../styles/leaderboard.css";
-import { useBodyClass } from '../utils/useBodyClass';
+// import { useBodyClass } from '../utils/useBodyClass';
 import { useQuery } from "@apollo/client";
 import { GET_USERS } from "@/graphql/queries";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
+
+
 
 
 function LeaderBoard() {
@@ -12,13 +15,19 @@ function LeaderBoard() {
 
   const allUsers = data?.getAllUsers || [];
 
-  useBodyClass('background-image');
+  useEffect(() => {
+    document.body.classList.add('gameover-background');
+    return () => {
+      document.body.classList.remove('gameover-background');
+    };
+  }, []);
 
   if (loading) return <p>Loading...</p>;
 
   const sortedUsers = [...allUsers].sort((a, b) => b.correctAnswers - a.correctAnswers);
 
   console.log(allUsers);
+
 
   return (
     <div className="leaderboard-page">
@@ -31,7 +40,7 @@ function LeaderBoard() {
                 <div className="player-info">
                   <img src={user.selectedAvatar} />
                   <p>{user.username}</p>
-                  <img src="/src/assets/dans_gold_star.png" />
+                  <img src="/public/assets/dans_gold_star.png" />
                   <p>{user.correctAnswers}</p>
                 </div>
               );

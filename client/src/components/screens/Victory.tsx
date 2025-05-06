@@ -9,6 +9,8 @@ export default function VictoryPage({
 }) {
   const navigate = useNavigate();
 
+
+
   useEffect(() => {
     const victoryMusic = new Audio('/totalwin1.mp3');
     victoryMusic.volume = 0.5;
@@ -17,6 +19,12 @@ export default function VictoryPage({
     });
   }, []);
 
+  useEffect(() => {
+    document.body.classList.add('gameover-background');
+    return () => {
+      document.body.classList.remove('gameover-background');
+    };
+  }, []);
   const handlePlayAgain = () => {
     navigate('/map');
   };
