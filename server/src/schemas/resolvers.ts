@@ -102,6 +102,7 @@ const resolvers = {
     },
 
     updateStats: async (_parent: any, { isCorrect }: { isCorrect: boolean }, context: any) => {
+      // console.log('Updating stats for user:', context.user);
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in!');
       }
