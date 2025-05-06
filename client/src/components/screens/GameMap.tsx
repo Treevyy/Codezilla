@@ -71,7 +71,7 @@ const GameMap: React.FC = () => {
       xPercent: 70,
       yPercent: 45,
       image: '/minions/pie-thon.png',
-      name: 'Pie-Thon',
+      name: 'Pie-Thon',g
       questionId: 'q4',
       taunt: "The only slice you'll get is defeat.",
       sound: '/public/snakeHiss.mp3',

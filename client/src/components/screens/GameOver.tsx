@@ -9,6 +9,14 @@ const GameOverPage = ({
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.body.classList.add('gameover-background');
+
+    return () => {
+      document.body.classList.remove('gameover-background');
+    };
+  }, []);
+
+  useEffect(() => {
     const music = new Audio('/game_over.mp3');
     const roar = new Audio('/godzilla.roar.mp3');
 
